@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.letter {
+    box-sizing: content-box;
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    border: solid 1px white;
+    border-radius: 50%;
+    text-align: center;
+    padding: 15px;
+    background-color: #176bcb;
+    color: white;
+    font-weight: bolder;
+    font-size:18px
+}

@@ -1,0 +1,7 @@
+ CATEGORIAS
+-- Crear formulario para categorias
+-- Recoger todas las categorias de bbdd y mostrarlas en lista (si no hay categorias mostrar mensaje en su lugar)
+
+ PREGUNTAS
+-- En formulario de preguntas mostrar el select con todas las categorias disponibles
+-- En formulario de preguntas hacer el insert bien
