@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Pasapalabras;
 use Illuminate\Http\Request;
+use App\Models\Categoria;
+use App\Models\Preguntas;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Illuminate\Http\RedirectResponse;
 
 class PasapalabrasController extends Controller
 {
@@ -13,7 +18,9 @@ class PasapalabrasController extends Controller
     public function index()
     {
         //
-        
+        $categorias = Categoria::where('id', Auth::id())->get(['nombre_categoria', 'id']);
+        $preguntas = Preguntas::where('id_usuario', Auth::id())->get();
+        return Inertia::render("Pregunta", ['categorias' => $categorias, 'preguntas' => $preguntas]);
     }
 
     /**
@@ -27,11 +34,11 @@ class PasapalabrasController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         //
-        
-                    
+
+        return to_route('pregunta.index');
     }
 
     /**

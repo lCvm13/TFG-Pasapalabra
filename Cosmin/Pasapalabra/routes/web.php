@@ -1,11 +1,15 @@
 <?php
 
 use App\Http\Controllers\CategoriasController;
+use App\Http\Controllers\PasapalabrasController;
 use App\Http\Controllers\PreguntasController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Categoria;
+use App\Models\Pasapalabras;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -13,6 +17,7 @@ Route::get('/', function () {
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'categorias' => Categoria::where('id', Auth::id())->get()
     ]);
 })->name('index');
 
@@ -23,12 +28,16 @@ Route::get('/dashboard', function () {
 
 
 Route::resource('pregunta', PreguntasController::class)
-->only(['index', 'store', 'edit', 'update', 'destroy'])
-->middleware(['auth', 'verified']); 
+    ->only(['index', 'store', 'edit', 'update', 'destroy'])
+    ->middleware(['auth', 'verified']);
+
+Route::resource('pasapalabra', PasapalabrasController::class)
+    ->only(['index', 'store', 'edit', 'update', 'destroy'])
+    ->middleware(['auth', 'verified']);
 
 Route::resource('categoria', CategoriasController::class)
-->only(['index','show', 'store', 'edit', 'update', 'destroy'])
-->middleware(['auth']);
+    ->only(['index', 'show', 'store', 'edit', 'update', 'destroy'])
+    ->middleware(['auth']);
 
 
 Route::middleware('auth')->group(function () {
@@ -37,4 +46,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

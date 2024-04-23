@@ -8,6 +8,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+use function PHPSTORM_META\map;
+
 class CategoriasController extends Controller
 {
     /**
@@ -15,10 +17,10 @@ class CategoriasController extends Controller
      */
     public function index()
     {
-        $categorias= Categoria::all();
+        $categorias= Categoria::where('id', Auth::id())->get(); 
         return Inertia::render("Categoria", ['categorias' => $categorias]);
     }
-
+ 
     /**
      * Show the form for creating a new resource.
      */

@@ -20,6 +20,6 @@ class Preguntas extends Model
     }
     
     protected $fillable = [
-        'pregunta', 'respuesta', 'id_categoria'
+        'pregunta', 'respuesta', 'id_categoria','id_usuario','letra','posicion_letra'
     ];
 }

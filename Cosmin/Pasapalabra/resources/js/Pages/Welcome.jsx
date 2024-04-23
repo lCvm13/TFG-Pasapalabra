@@ -1,13 +1,25 @@
 import { Link, Head } from '@inertiajs/react';
-
-export default function Welcome({ auth, laravelVersion, phpVersion }) {
+import Swal from 'sweetalert2'
+import { useState } from 'react';
+export default function Welcome({ auth, laravelVersion, phpVersion, categorias }) {
     const handleImageError = () => {
         document.getElementById('screenshot-container')?.classList.add('!hidden');
         document.getElementById('docs-card')?.classList.add('!row-span-1');
         document.getElementById('docs-card-content')?.classList.add('!flex-row');
         document.getElementById('background')?.classList.add('!hidden');
     };
-
+    console.log(categorias)
+    const [inputValue, setInputValue] = useState('')
+    const showForm = () => {
+        Swal.fire({
+            title: "Inserta el nombre del Pasapalabra nuevo",
+            input: 'text',
+            inputValue,
+            preConfirm: () => {
+                setInputValue(Swal.getInput()?.value || '')
+            }
+        })
+    }
     return (
         <>
             <Head title="Welcome" />
@@ -144,17 +156,18 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                 </a>
 
                                 <a
-                                    href="https://laravel-news.com"
+                                    href="#"
                                     className="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
+                                    onClick={auth.user ? showForm : null}
                                 >
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 300 300">
 
                                             <circle cx="150" cy="150" r="120" fill="#f8f8f8" stroke="#000" stroke-width="2" />
-                                            
+
                                             <circle cx="150" cy="150" r="110" fill="none" stroke="#000" stroke-width="2" />
-                                            
-                                            
+
+
                                             <text x="150" y="70" font-family="Arial" font-size="20" fill="#000" text-anchor="middle">A</text>
                                             <text x="210" y="90" font-family="Arial" font-size="20" fill="#000" text-anchor="middle">B</text>
                                             <text x="240" y="160" font-family="Arial" font-size="20" fill="#000" text-anchor="middle">C</text>
@@ -200,10 +213,10 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                         <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 300 300">
 
                                             <circle cx="150" cy="150" r="120" fill="#f8f8f8" stroke="#000" stroke-width="2" />
-                                            
+
                                             <circle cx="150" cy="150" r="110" fill="none" stroke="#000" stroke-width="2" />
-                                            
-                                            
+
+
                                             <text x="150" y="70" font-family="Arial" font-size="20" fill="#000" text-anchor="middle">A</text>
                                             <text x="210" y="90" font-family="Arial" font-size="20" fill="#000" text-anchor="middle">B</text>
                                             <text x="240" y="160" font-family="Arial" font-size="20" fill="#000" text-anchor="middle">C</text>
@@ -240,7 +253,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                         />
                                     </svg>
                                 </a>
-                                
+
                             </div>
                         </main>
 
