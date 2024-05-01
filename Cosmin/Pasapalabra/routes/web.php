@@ -29,15 +29,18 @@ Route::get('/dashboard', function () {
 
 Route::resource('pregunta', PreguntasController::class)
     ->only(['index', 'store', 'edit', 'update', 'destroy'])
-    ->middleware(['auth', 'verified']);
+    ->middleware(['auth']);
 
 Route::resource('pasapalabra', PasapalabrasController::class)
-    ->only(['index', 'store', 'edit', 'update', 'destroy'])
-    ->middleware(['auth', 'verified']);
-
-Route::resource('categoria', CategoriasController::class)
-    ->only(['index', 'show', 'store', 'edit', 'update', 'destroy'])
+    ->only(['index', 'show', 'store', 'edit', 'update', 'destroy', 'delete'])
     ->middleware(['auth']);
+
+Route::delete('/pasapalabra/{pasapalabra}', [Pasapalabras::class, 'destroy'])->name('pasapalabra.destroy');
+
+Route::resource('categoria', CategoriasController::class)->only(['index', 'show', 'store', 'edit', 'update', 'destroy', 'categoriaForm'])
+    ->middleware(['auth']);
+
+Route::get('categoriaForm', [CategoriasController::class, 'categoriaForm'])->name('categoria.categoriaForm');
 
 
 Route::middleware('auth')->group(function () {

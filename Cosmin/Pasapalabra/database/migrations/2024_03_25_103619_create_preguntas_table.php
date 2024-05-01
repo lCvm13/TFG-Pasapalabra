@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string("respuesta");
             $table->string("letra");
             $table->string("posición_letra");
-            $table->foreignId("id_categoria");
+            $table->foreignId("id_categoria")->nullable();
             $table->timestamps();
             $table->foreign('id_usuario')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('id_categoria')->references('id')->on('categorias')->onDelete('cascade');

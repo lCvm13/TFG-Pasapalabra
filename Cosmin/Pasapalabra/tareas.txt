@@ -1,7 +1,27 @@
  CATEGORIAS
 -- Crear formulario para categorias
 -- Recoger todas las categorias de bbdd y mostrarlas en lista (si no hay categorias mostrar mensaje en su lugar)
+-- Generar categoria en formulario de pasapalabra si no quiere usar el select usar lo siguiente
 
+<input type="text" name="city" list="cityname">
+    <datalist id="cityname">
+      <option value="Boston">
+      <option value="Cambridge">
+    </datalist>
+
+    
  PREGUNTAS
 -- En formulario de preguntas mostrar el select con todas las categorias disponibles
 -- En formulario de preguntas hacer el insert bien
+-- Categoria sera opcional 
+
+
+ PASAPALABRA
+-- Pensar como poner la categoria en el pasapalabra siendo opcional
+-- Como crear un rosco aleatorio de la categoria que quiera
+-- 
+
+  API PREGUNTAS ALEATORIAS
+-- Generar rosco con las preguntas de la api, traduciendolas y adaptando las letras.
+-- Borrar rosco de bbdd tras terminar la partida 
+

@@ -12,4 +12,8 @@ class Pasapalabras extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected $fillable = [
+        'id', 'nombre', 'id_usuario', "categoria"
+    ];
 }

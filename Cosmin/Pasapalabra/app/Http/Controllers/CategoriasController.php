@@ -17,10 +17,10 @@ class CategoriasController extends Controller
      */
     public function index()
     {
-        $categorias= Categoria::where('id', Auth::id())->get(); 
-        return Inertia::render("Categoria", ['categorias' => $categorias]);
+        $categorias = Categoria::where('id', Auth::id())->get();
+        return Inertia::render("ListCategorias", ['categorias' => $categorias]);
     }
- 
+
     /**
      * Show the form for creating a new resource.
      */
@@ -32,16 +32,17 @@ class CategoriasController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) :RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-    
         Categoria::create(
-        $request->validate([
-            'nombre_categoria' => 'required|string|max:255',
-            'id_usuario' => 'required'
+            $request->validate([
+                'nombre_categoria' => 'required|string|max:255',
+                'id_usuario' => 'required'
             ])
         );
-    
+        if ($request->url_to != null) {
+            return to_route($request->url_to);
+        }
         return to_route('categoria.index');
     }
 
@@ -50,10 +51,11 @@ class CategoriasController extends Controller
      */
     public function show(Categoria $categorias)
     {
-        //
+        $categorias = Categoria::where('id', Auth::id())->get();
+        return Inertia::render("Categoria", ['categorias' => $categorias]);
     }
 
-   
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -76,5 +78,10 @@ class CategoriasController extends Controller
     public function destroy(Categoria $categorias)
     {
         //
+    }
+
+    public function categoriaForm()
+    {
+        return Inertia::render("Categoria");
     }
 }

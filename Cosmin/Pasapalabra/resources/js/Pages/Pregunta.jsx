@@ -1,4 +1,4 @@
-import Pasapalabra from "@/Components/Pasapalabra";
+import Pasapalabra from "@/Components/RoscoPasapalabra";
 import { useState } from "react";
 import { router } from "@inertiajs/react"
 export default function Pregunta({ categorias, auth }) {
@@ -64,6 +64,7 @@ export default function Pregunta({ categorias, auth }) {
                             return <option key={i} value={element.id}>{element.nombre_categoria}</option>
                         })}
                     </select>
+                    <span className="text-sky-400 text-sm">Es opcional</span>
                 </div>
                 <button className="border-sky-500 border-solid border-2 w-max p-2 self-center hover:bg-sky-200">Insertar</button>
             </form>

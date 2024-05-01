@@ -6,6 +6,7 @@ use App\Models\Pasapalabras;
 use Illuminate\Http\Request;
 use App\Models\Categoria;
 use App\Models\Preguntas;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
@@ -18,9 +19,12 @@ class PasapalabrasController extends Controller
     public function index()
     {
         //
+        //$categorias = Categoria::where('id', Auth::id())->get(['nombre_categoria', 'id']);
+        //$preguntas = Preguntas::where('id_usuario', Auth::id())->get();
+        //return Inertia::render("Pasapalabra", ['categorias' => $categorias, 'preguntas' => $preguntas]);
+        $pasapalabras = Pasapalabras::where('id_usuario', Auth::id())->get();
         $categorias = Categoria::where('id', Auth::id())->get(['nombre_categoria', 'id']);
-        $preguntas = Preguntas::where('id_usuario', Auth::id())->get();
-        return Inertia::render("Pregunta", ['categorias' => $categorias, 'preguntas' => $preguntas]);
+        return Inertia::render("ListPasapalabras", ['pasapalabras' => $pasapalabras, 'categorias' => $categorias]);
     }
 
     /**
@@ -37,8 +41,17 @@ class PasapalabrasController extends Controller
     public function store(Request $request): RedirectResponse
     {
         //
-
-        return to_route('pregunta.index');
+        Pasapalabras::create(
+            $request->validate([
+                'nombre' => 'required|string|max:255',
+                'id_usuario' => 'required'
+            ])
+        );
+        $nombre_pasap = $request->nombre;
+        if ($request->url_to != null) {
+            return to_route($request->url_to, ['pasapalabra' => $nombre_pasap]);
+        }
+        return to_route('pasapalabra.index');
     }
 
     /**
@@ -46,7 +59,8 @@ class PasapalabrasController extends Controller
      */
     public function show(Pasapalabras $pasapalabras)
     {
-        //
+        $pasapalabras = Pasapalabras::where('id_usuario', Auth::id())->get();
+        return Inertia::render("ListPasapalabras", ['pasapalabras' => $pasapalabras]);
     }
 
     /**
@@ -54,7 +68,10 @@ class PasapalabrasController extends Controller
      */
     public function edit(Pasapalabras $pasapalabras)
     {
-        //
+
+        $categorias = Categoria::where('id', Auth::id())->get(['nombre_categoria', 'id']);
+        $preguntas = Preguntas::where('id_usuario', Auth::id())->get();
+        return Inertia::render("Pasapalabra", ['pasapalabra' => $pasapalabras, 'categorias' => $categorias, 'preguntas' => $preguntas]);
     }
 
     /**
@@ -70,6 +87,6 @@ class PasapalabrasController extends Controller
      */
     public function destroy(Pasapalabras $pasapalabras)
     {
-        //
+        $pasapalabras->delete();
     }
 }

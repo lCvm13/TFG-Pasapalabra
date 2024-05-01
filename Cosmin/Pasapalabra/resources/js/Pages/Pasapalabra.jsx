@@ -1,7 +1,8 @@
-import Pasapalabra from "@/Components/Pasapalabra";
+import Pasapalabra from "@/Components/RoscoPasapalabra";
 import { useState } from "react";
 import { router } from "@inertiajs/react"
-export default function Pregunta({ categorias, auth }) {
+import RoscoPasapalabra from "@/Components/RoscoPasapalabra";
+export default function PasapalabraForm({ categorias, auth, nombre }) {
   const [letterValue, setLetterValue] = useState("a")
   const setLetter = (letter) => {
     setLetterValue(letter)
@@ -32,7 +33,7 @@ export default function Pregunta({ categorias, auth }) {
     router.post(route("pregunta.store"), values)
   }
   return <section className="w-full h-screen grid grid-cols-2">
-    <Pasapalabra letterValue={letterValue} setLetter={setLetter}></Pasapalabra>
+    <RoscoPasapalabra letterValue={letterValue} setLetter={setLetter}></RoscoPasapalabra>
     <div className="justify-self-center self-center border-solid border-2 border-sky-500 p-10 flex flex-col gap-10 mr-40 mb-40">
       <h1 className="text-blue-400 font-extrabold text-4xl">Inserta las preguntas para el PasapaLearning</h1>
       <form onSubmit={handleSubmit} method="POST" className="flex flex-col gap-10">

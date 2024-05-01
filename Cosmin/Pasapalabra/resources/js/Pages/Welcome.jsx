@@ -1,6 +1,7 @@
 import { Link, Head } from '@inertiajs/react';
 import Swal from 'sweetalert2'
 import { useState } from 'react';
+import { router } from '@inertiajs/react';
 export default function Welcome({ auth, laravelVersion, phpVersion, categorias }) {
     const handleImageError = () => {
         document.getElementById('screenshot-container')?.classList.add('!hidden');
@@ -8,17 +9,22 @@ export default function Welcome({ auth, laravelVersion, phpVersion, categorias }
         document.getElementById('docs-card-content')?.classList.add('!flex-row');
         document.getElementById('background')?.classList.add('!hidden');
     };
-    console.log(categorias)
-    const [inputValue, setInputValue] = useState('')
+    const user = (auth) => {
+        return auth.id;
+    };
+
+
     const showForm = () => {
         Swal.fire({
             title: "Inserta el nombre del Pasapalabra nuevo",
             input: 'text',
-            inputValue,
             preConfirm: () => {
-                setInputValue(Swal.getInput()?.value || '')
+                handleSubmit(Swal.getInput()?.value)
             }
         })
+    }
+    function handleSubmit(nombre) {
+        router.post(route("pasapalabra.store"), { nombre: nombre, id_usuario: user(auth.user), url_to: "pasapalabra.edit" })
     }
     return (
         <>
@@ -206,7 +212,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, categorias }
                                     </svg>
                                 </a>
                                 <a
-                                    href="https://laravel-news.com"
+                                    href={route("pasapalabra.index")}
                                     className="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
                                 >
                                     <div>
