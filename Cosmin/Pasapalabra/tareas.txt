@@ -25,3 +25,8 @@
 -- Generar rosco con las preguntas de la api, traduciendolas y adaptando las letras.
 -- Borrar rosco de bbdd tras terminar la partida 
 
+
+PASOS : 
+
+-- Corregir enlaces del menu navegacion
+-- Corregir los mensajes para que se muestren tras hacer alguna accion

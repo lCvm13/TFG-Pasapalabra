@@ -32,12 +32,15 @@ export default function ListPasapalabra({ pasapalabras, auth, categorias }) {
   }
 
   const destroy = (id) => {
-    if (confirm('Are you sure?')) {
-      router.delete(route("pasapalabra.destroy", id))
-    }
-
+    router.delete(`/categoria/${id}`, {
+      onBefore: () => confirm('Are you sure you want to delete this user?'),
+    })
   }
-
+  const edit = (id) => {
+    router.edit(`/categoria/${id}`, {
+      onBefore: () => confirm('Are you sure you want to delete this user?'),
+    })
+  }
 
   return (
     <section className="flex flex-row items-center justify-center gap-5">
@@ -58,8 +61,8 @@ export default function ListPasapalabra({ pasapalabras, auth, categorias }) {
                 <td key={i}>{element.nombre}</td>
                 <td key={i + 1}>{element.categoria == undefined ? "No tiene categoria" : element.categoria}</td>
                 <td key={i + 2}><button onClick={() => null}><BsPlayCircleFill /></button></td>
-                <td key={i + 3}><button onClick={() => location.href = route("pasapalabra.edit", element.nombre)}><BsFillPencilFill /></button></td>
-                <td key={i + 4}><button onClick={() => router.delete(route("pasapalabra.destroy", element.id))}><BsFillTrash2Fill /></button></td>
+                <td key={i + 3}><button onClick={() => edit(element.nombre)}><BsFillPencilFill /></button></td>
+                <td key={i + 4}><button onClick={() => destroy(element.id)}><BsFillTrash2Fill /></button></td>
               </tr>)
           })}
         </tbody>

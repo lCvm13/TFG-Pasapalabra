@@ -18,8 +18,9 @@ class PreguntasController extends Controller
 
     {
         // Get all Categorias with id == auth user id.
-        $categorias = Categoria::where('id', Auth::id())->get(['nombre_categoria', 'id']);
-        return Inertia::render("Pregunta", ['categorias' => $categorias]);
+        $preguntas = Preguntas::where('id_usuario', Auth::id())->get();
+        $categorias = Categoria::where('id_usuario', Auth::id())->get(['nombre_categoria', 'id']);
+        return Inertia::render("ListPreguntas", ['preguntas' => $preguntas, 'categorias' => $categorias]);
     }
 
     /**

@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categoria;
 use App\Models\Partidas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Inertia\Inertia;
 
 class PartidasController extends Controller
 {
@@ -61,5 +65,12 @@ class PartidasController extends Controller
     public function destroy(Partidas $partidas)
     {
         //
+    }
+    public function aleatorio()
+    {
+        $contents = File::get(base_path('public/storage/json/generate.json'));
+        $json = json_decode(json: $contents, associative: true);
+        $categorias = Categoria::where('id_usuario', Auth::id())->get();
+        return Inertia::render('Aleatorio', ['preguntas' => $json, 'categorias' => $categorias]);
     }
 }

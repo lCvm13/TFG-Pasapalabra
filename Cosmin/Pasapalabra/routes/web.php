@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoriasController;
+use App\Http\Controllers\PartidasController;
 use App\Http\Controllers\PasapalabrasController;
 use App\Http\Controllers\PreguntasController;
 use App\Http\Controllers\ProfileController;
@@ -28,20 +29,24 @@ Route::get('/dashboard', function () {
 
 
 Route::resource('pregunta', PreguntasController::class)
-    ->only(['index', 'store', 'edit', 'update', 'destroy'])
+    ->only(['index', 'store', 'create', 'edit', 'update', 'destroy'])
+    ->middleware(['auth']);
+
+Route::resource('partida', PartidasController::class)
+    ->only(['index', 'store', 'create', 'edit', 'update', 'destroy', 'aleatorio'])
     ->middleware(['auth']);
 
 Route::resource('pasapalabra', PasapalabrasController::class)
-    ->only(['index', 'show', 'store', 'edit', 'update', 'destroy', 'delete'])
+    ->only(['index', 'show', 'create', 'store', 'edit', 'update', 'destroy'])
     ->middleware(['auth']);
 
-Route::delete('/pasapalabra/{pasapalabra}', [Pasapalabras::class, 'destroy'])->name('pasapalabra.destroy');
-
-Route::resource('categoria', CategoriasController::class)->only(['index', 'show', 'store', 'edit', 'update', 'destroy', 'categoriaForm'])
+Route::resource('categoria', CategoriasController::class)
+    ->only(['index', 'create', 'show', 'store', 'edit', 'update', 'destroy'])
     ->middleware(['auth']);
 
-Route::get('categoriaForm', [CategoriasController::class, 'categoriaForm'])->name('categoria.categoriaForm');
+// Route::get('form', [CategoriasController::class, 'form'])->name('categoria.form');
 
+Route::get('aleatorio', [PartidasController::class, 'aleatorio'])->name('partida.aleatorio');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

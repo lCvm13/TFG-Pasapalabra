@@ -37,7 +37,7 @@ export default function NavMenu({ ...props }) {
     return (
       <nav>
         {Object.entries(navBarData).map(([titulo, enlaces]) => (
-          <div key={titulo} className="text-sky-600 p-10">
+          <div key={titulo + 1} className="text-blue-900 p-10 font-extrabold">
             <h2 className="text-3xl">{titulo}</h2>
             <hr />
             <ul>
@@ -55,12 +55,12 @@ export default function NavMenu({ ...props }) {
 
 
   return (
-    <section>
+    <aside>
       <div id="mySidenav" className="sidenav">
         <a href="#" className="closebtn" onClick={() => closeNav()}>&times;</a>
         {<NavBar navBarData={navBarData}></NavBar>}
       </div>
       <span className="text-4xl m-5 absolute top-0 cursor-pointer" onClick={() => openNav()}>&#9776;</span>
-    </section >
+    </aside >
   );
 }

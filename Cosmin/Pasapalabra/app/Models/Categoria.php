@@ -12,8 +12,8 @@ class Categoria extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+    protected $primaryKey = 'id';
     protected $fillable = [
-        'nombre_categoria' ,'id_usuario'
+        'nombre_categoria', 'id_usuario'
     ];
 }

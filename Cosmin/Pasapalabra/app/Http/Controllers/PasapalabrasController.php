@@ -6,6 +6,7 @@ use App\Models\Pasapalabras;
 use Illuminate\Http\Request;
 use App\Models\Categoria;
 use App\Models\Preguntas;
+
 use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -87,6 +88,8 @@ class PasapalabrasController extends Controller
      */
     public function destroy(Pasapalabras $pasapalabras)
     {
+
         $pasapalabras->delete();
+        dd($pasapalabras);
     }
 }
