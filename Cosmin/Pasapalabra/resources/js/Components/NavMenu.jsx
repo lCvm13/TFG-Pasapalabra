@@ -1,6 +1,7 @@
 
 import { router } from "@inertiajs/react";
-export default function NavMenu({ ...props }) {
+import Swal from 'sweetalert2'
+export default function NavMenu({ user }) {
   const closeNav = () => {
     document.getElementById("mySidenav").style = "width:0";
   }
@@ -17,12 +18,12 @@ export default function NavMenu({ ...props }) {
     })
   }
   function handleSubmit(nombre) {
-    router.post(route("pasapalabra.store"), { nombre: nombre, id_usuario: user(auth.user), url_to: "pasapalabra.edit" })
+    router.post(route("pasapalabra.store"), { nombre: nombre, id_usuario: user.id, url_to: "pasapalabra.edit" })
   }
   const navBarData = {
     Categorias: {
       Index: "categoria.index",
-      Formulario: "categoria.categoriaForm"
+      Formulario: "categoria.create"
     },
     Pasapalabra: {
       Index: "pasapalabra.index",
@@ -30,9 +31,11 @@ export default function NavMenu({ ...props }) {
     },
     Preguntas: {
       Index: "pregunta.index",
-      Formulario: "pregunta.form"
+      Formulario: "pregunta.create"
     }
   }
+
+
   const NavBar = ({ navBarData }) => {
     return (
       <nav>
@@ -43,7 +46,7 @@ export default function NavMenu({ ...props }) {
             <ul>
               {Object.entries(enlaces).map(([nombre, valor]) => (
                 <li key={nombre}>
-                  <a href={valor}>{nombre}</a>
+                  <a href={valor != "showForm" ? route(valor) : "#"} onClick={valor != "showForm" ? null : () => showForm()}>{nombre}</a>
                 </li>
               ))}
             </ul>

@@ -28,7 +28,8 @@ class PreguntasController extends Controller
      */
     public function create()
     {
-        //
+        $categorias = Categoria::where('id_usuario', Auth::id())->get(['nombre_categoria', 'id']);
+        return Inertia::render("Pregunta", ['categorias' => $categorias]);
     }
 
     /**

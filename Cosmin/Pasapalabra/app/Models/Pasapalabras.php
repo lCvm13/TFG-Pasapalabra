@@ -14,6 +14,6 @@ class Pasapalabras extends Model
     }
 
     protected $fillable = [
-        'id', 'nombre', 'id_usuario', "categoria"
+        'id', 'nombre', 'id_usuario', "id_categoria"
     ];
 }

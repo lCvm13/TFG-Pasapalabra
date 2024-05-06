@@ -42,12 +42,15 @@ export default function ListCategorias({ preguntas, categorias, auth }) {
 
   return (
     <div>
-      <NavMenu></NavMenu>
+      <NavMenu user={auth.user}></NavMenu>
       <section className="flex flex-col  items-center justify-center gap-5 mx-20">
         <table className="w-10/12 mx-20 my-20 text-center">
           <thead>
             <tr>
-              <th>Nombre Categoria</th>
+              <th>Pregunta</th>
+              <th>Respuesta</th>
+              <th>Posición de la letra</th>
+              <th>Letra</th>
               <th>Ultima actualización</th>
               <th></th>
               <th></th>
@@ -57,7 +60,10 @@ export default function ListCategorias({ preguntas, categorias, auth }) {
             {preguntas.map((element, i) => {
               return (
                 <tr key={i - 1} className="">
-                  <td key={i}>{element.nombre_categoria}</td>
+                  <td key={i}>{element.pregunta}</td>
+                  <td key={i}>{element.respuesta}</td>
+                  <td key={i}>{element.posicion_letra}</td>
+                  <td key={i}>{element.letra}</td>
                   <td key={i + 1}>{element.created_at.split("T")[0]}</td>
                   <td key={i + 3}><button onClick={() => location.href = route("categoria.edit", element.nombre)}><BsFillPencilFill /></button></td>
                   <td key={i + 4}><button onClick={() => router.delete(route("categoria.destroy", element.id))}><BsFillTrash2Fill /></button></td>
@@ -65,7 +71,7 @@ export default function ListCategorias({ preguntas, categorias, auth }) {
             })}
           </tbody>
         </table>
-        <button className="border-solid border-sky-500 border-2 p-2 :hover-sky-200" onClick={() => location.href = route("pregunta.form")}>Crear Pregunta</button>
+        <button className="border-solid border-sky-500 border-2 p-2 :hover-sky-200" onClick={() => location.href = route("pregunta.create")}>Crear Pregunta</button>
       </section>
     </div>
 

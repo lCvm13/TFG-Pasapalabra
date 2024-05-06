@@ -1,7 +1,8 @@
 import Pasapalabra from "@/Components/RoscoPasapalabra";
 import { useState } from "react";
 import { router } from "@inertiajs/react"
-import { BsPlayCircleFill, BsFillTrash2Fill, BsFillPencilFill } from "react-icons/bs";
+import { BsPlayCircleFill, BsFillTrash2Fill, BsFillPencilFill, BsPlusCircleFill } from "react-icons/bs";
+import NavMenu from "@/Components/NavMenu";
 
 export default function ListPasapalabra({ pasapalabras, auth, categorias }) {
   const [letterValue, setLetterValue] = useState("a")
@@ -32,43 +33,49 @@ export default function ListPasapalabra({ pasapalabras, auth, categorias }) {
   }
 
   const destroy = (id) => {
-    router.delete(`/categoria/${id}`, {
-      onBefore: () => confirm('Are you sure you want to delete this user?'),
+    router.delete(`/pasapalabra/${id}`, {
+      onBefore: () => confirm('¿Estás seguro que quieres borrar este rosco de pasapalabra?'),
     })
   }
   const edit = (id) => {
-    router.edit(`/categoria/${id}`, {
-      onBefore: () => confirm('Are you sure you want to delete this user?'),
-    })
+    router.patch(`/pasapalabra/${id}`)
   }
-
+  const valorCategoria = (id) => {
+    let valor = categorias.find(element => element.id == id)
+    return valor.nombre_categoria
+  }
   return (
-    <section className="flex flex-row items-center justify-center gap-5">
-      <table className="w-screen mx-20 my-20 text-center">
-        <thead>
-          <tr>
-            <th>Nombre Pasapalabra</th>
-            <th>Categoria Pasapalabra</th>
-            <th></th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {pasapalabras.map((element, i) => {
-            return (
-              <tr key={i - 1} className="">
-                <td key={i}>{element.nombre}</td>
-                <td key={i + 1}>{element.categoria == undefined ? "No tiene categoria" : element.categoria}</td>
-                <td key={i + 2}><button onClick={() => null}><BsPlayCircleFill /></button></td>
-                <td key={i + 3}><button onClick={() => edit(element.nombre)}><BsFillPencilFill /></button></td>
-                <td key={i + 4}><button onClick={() => destroy(element.id)}><BsFillTrash2Fill /></button></td>
-              </tr>)
-          })}
-        </tbody>
-      </table>
+    <div>
+      <NavMenu user={auth.user}></NavMenu>
+      <section className="flex flex-row items-center justify-center gap-5">
+        <table className="w-screen mx-20 my-20 text-center">
+          <thead>
+            <tr>
+              <th>Nombre Pasapalabra</th>
+              <th>Categoria Pasapalabra</th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {pasapalabras.map((element, i) => {
+              return (
+                <tr key={i - 1} className="">
+                  <td key={i}>{element.nombre}</td>
+                  <td key={i + 1}>{element.id_categoria == undefined ? "No tiene categoria" : valorCategoria(element.id_categoria)}</td>
+                  <td key={i + 2}><button onClick={() => null}><BsPlayCircleFill /></button></td>
+                  <td key={i + 5}><button onClick={() => null}><BsPlusCircleFill /></button></td>
+                  <td key={i + 3}><button onClick={() => location.href = route("pasapalabra.edit", element.id)}><BsFillPencilFill /></button></td>
+                  <td key={i + 4}><button onClick={() => destroy(element.id)}><BsFillTrash2Fill /></button></td>
+                </tr>)
+            })}
+          </tbody>
+        </table>
 
-    </section>
+      </section>
+    </div>
   );
 
 }

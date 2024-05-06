@@ -1,7 +1,7 @@
  CATEGORIAS
--- Crear formulario para categorias
--- Recoger todas las categorias de bbdd y mostrarlas en lista (si no hay categorias mostrar mensaje en su lugar)
--- Generar categoria en formulario de pasapalabra si no quiere usar el select usar lo siguiente
+-x Crear formulario para categorias
+-x Recoger todas las categorias de bbdd y mostrarlas en lista (si no hay categorias mostrar mensaje en su lugar)
+-- Generar categoria en formulario de pasapalabra si no quiere usar el select usar lo siguiente (PARA EL FINAL)
 
 <input type="text" name="city" list="cityname">
     <datalist id="cityname">
@@ -11,9 +11,9 @@
 
     
  PREGUNTAS
--- En formulario de preguntas mostrar el select con todas las categorias disponibles
--- En formulario de preguntas hacer el insert bien
--- Categoria sera opcional 
+-X En formulario de preguntas mostrar el select con todas las categorias disponibles
+-x En formulario de preguntas hacer el insert bien
+-x Categoria sera opcional 
 
 
  PASAPALABRA
@@ -28,5 +28,5 @@
 
 PASOS : 
 
--- Corregir enlaces del menu navegacion
--- Corregir los mensajes para que se muestren tras hacer alguna accion
+-X Corregir enlaces del menu navegacion
+-- Corregir los mensajes para que se muestren tras hacer alguna accion (PARA EL FINAL)

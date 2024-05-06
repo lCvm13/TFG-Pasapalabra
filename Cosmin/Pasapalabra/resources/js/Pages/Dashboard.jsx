@@ -11,10 +11,12 @@ export default function Dashboard({ auth }) {
     };
     console.log(auth)
     return (
+
         <AuthenticatedLayout
             user={auth.user}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Bienvenid@ {user(auth.user)}</h2>}
         >
+            <NavMenu user={auth.user}></NavMenu>
             <Head title="Dashboard" />
 
             <div className="py-12 ">

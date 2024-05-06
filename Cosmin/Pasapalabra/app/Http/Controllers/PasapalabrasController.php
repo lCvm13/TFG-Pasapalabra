@@ -24,7 +24,7 @@ class PasapalabrasController extends Controller
         //$preguntas = Preguntas::where('id_usuario', Auth::id())->get();
         //return Inertia::render("Pasapalabra", ['categorias' => $categorias, 'preguntas' => $preguntas]);
         $pasapalabras = Pasapalabras::where('id_usuario', Auth::id())->get();
-        $categorias = Categoria::where('id', Auth::id())->get(['nombre_categoria', 'id']);
+        $categorias = Categoria::where('id_usuario', Auth::id())->get(['nombre_categoria', 'id']);
         return Inertia::render("ListPasapalabras", ['pasapalabras' => $pasapalabras, 'categorias' => $categorias]);
     }
 
@@ -67,29 +67,35 @@ class PasapalabrasController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Pasapalabras $pasapalabras)
+    public function edit($id_pasapalabra)
     {
-
-        $categorias = Categoria::where('id', Auth::id())->get(['nombre_categoria', 'id']);
+        $pasapalabra = Pasapalabras::find($id_pasapalabra);
+        $categorias = Categoria::where('id_usuario', Auth::id())->get(['nombre_categoria', 'id']);
         $preguntas = Preguntas::where('id_usuario', Auth::id())->get();
-        return Inertia::render("Pasapalabra", ['pasapalabra' => $pasapalabras, 'categorias' => $categorias, 'preguntas' => $preguntas]);
+        return Inertia::render("Pasapalabra", ['pasapalabra' => $pasapalabra, 'categorias' => $categorias, 'preguntas' => $preguntas]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pasapalabras $pasapalabras)
+    public function update(Request $request, $id_pasapalabra)
     {
-        //
+
+        Pasapalabras::find($id_pasapalabra)->update([
+            'nombre' => $request->nombre,
+            'id_categoria' => $request->id_categoria,
+        ]);
+
+        return redirect()->route('pasapalabra.index')->with('message', 'Categoría modificada correctamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pasapalabras $pasapalabras)
+    public function destroy($id_pasapalabra)
     {
 
-        $pasapalabras->delete();
-        dd($pasapalabras);
+        Pasapalabras::find($id_pasapalabra)->delete();
+        return redirect()->route('pasapalabra.index');
     }
 }

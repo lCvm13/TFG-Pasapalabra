@@ -1,6 +1,6 @@
 import { Link, Head } from '@inertiajs/react';
 import Swal from 'sweetalert2'
-import { useState } from 'react';
+
 import { router } from '@inertiajs/react';
 export default function Welcome({ auth, laravelVersion, phpVersion, categorias }) {
     const handleImageError = () => {

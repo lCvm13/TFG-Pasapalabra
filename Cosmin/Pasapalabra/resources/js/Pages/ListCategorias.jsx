@@ -8,14 +8,14 @@ export default function ListCategorias({ categorias, auth }) {
 
   const destroy = (id) => {
     router.delete(`/categoria/${id}`, {
-      onBefore: () => confirm('Are you sure you want to delete this user?'),
+      onBefore: () => confirm('¿Estás seguro que quieres borrar la categoria?'),
     })
   }
 
 
   return (
     <div>
-      <NavMenu></NavMenu>
+      <NavMenu user={auth.user}></NavMenu>
       <section className="flex flex-col  items-center justify-center gap-5 mx-20">
         <table className="w-10/12 mx-20 my-20 text-center">
           <thead>
@@ -31,10 +31,9 @@ export default function ListCategorias({ categorias, auth }) {
               return (
                 <tr key={i - 1} className="">
                   <td key={i}>{element.nombre_categoria}</td>
-                  <td key={i + 1}>{element.created_at.split("T")[0]}</td>
+                  <td key={i + 1}>{element.updated_at.split("T")[0]}</td>
                   <td key={i + 3}><button onClick={() => location.href = route("categoria.edit", element.id)}><BsFillPencilFill /></button></td>
                   <td key={i + 4}><button onClick={() =>
-
                     destroy(element.id)}><BsFillTrash2Fill /></button></td>
                 </tr>)
             })}

@@ -35,7 +35,7 @@ export default function Categoria({ categoria, auth, errors, }) {
         router.patch((`/categoria/${categoria.id}`), values)
     }
     return (<div className="h-screen flex flex-col justify-center ">
-        <NavMenu></NavMenu>
+        <NavMenu user={auth.user}></NavMenu>
         <h2 className="text-center text-lg font-bold text-gray-700 mb-6 text-2xl text-sky-700 ">Crea tu nueva categoria</h2>
         <form className="self-center justify-self-center flex flex-row items-center gap-10" method="POST" onSubmit={categoria == undefined ? handleSubmit : handleUpdate}>
             <label className="border-solid border-sky-500 border-2 p-2 :hover-sky-200 block font-semibold text-gray-600 mb-1" htmlFor="categoria">Nombre</label>
