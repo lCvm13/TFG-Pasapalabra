@@ -11,7 +11,31 @@ export default function ListCategorias({ categorias, auth }) {
       onBefore: () => confirm('¿Estás seguro que quieres borrar la categoria?'),
     })
   }
+  const [paginaActual, setPaginaActual] = useState(1);
 
+  // Calcular el índice de inicio y fin para los elementos de la página actual
+  const startIndex = (paginaActual - 1) * 10;
+  const endIndex = startIndex + 10;
+
+  // Obtener los datos de la página actual
+  const datosPaginaActual = categorias.slice(startIndex, endIndex);
+
+  // Función para cambiar a la página anterior
+  const irPaginaAnterior = () => {
+    if (paginaActual > 1) {
+      setPaginaActual(paginaActual - 1);
+    }
+  };
+
+  // Función para cambiar a la página siguiente
+  const irPaginaSiguiente = () => {
+    const totalPages = Math.ceil(categorias.length / 10);
+
+    if (paginaActual < totalPages) {
+
+      setPaginaActual(paginaActual + 1);
+    }
+  };
 
   return (
     <div>
@@ -27,7 +51,7 @@ export default function ListCategorias({ categorias, auth }) {
             </tr>
           </thead>
           <tbody>
-            {categorias.map((element, i) => {
+            {datosPaginaActual.map((element, i) => {
               return (
                 <tr key={i - 1} className="">
                   <td key={i}>{element.nombre_categoria}</td>
@@ -39,6 +63,10 @@ export default function ListCategorias({ categorias, auth }) {
             })}
           </tbody>
         </table>
+        <div>
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={irPaginaAnterior} disabled={paginaActual === 1}>Anterior</button>
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={irPaginaSiguiente} disabled={paginaActual === Math.ceil(categorias.length / 10)}>Siguiente</button>
+        </div>
         <button className="border-solid border-sky-500 border-2 p-2 :hover-sky-200" onClick={() => location.href = route("categoria.create")}>Crear categoria</button>
       </section>
     </div>

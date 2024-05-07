@@ -30,3 +30,7 @@ PASOS :
 
 -X Corregir enlaces del menu navegacion
 -- Corregir los mensajes para que se muestren tras hacer alguna accion (PARA EL FINAL)
+-- Añadir lista de preguntas de cada rosco de pasapalabras
+-- Poder modificar cada pregunta del rosco
+-- Poder añadir preguntas a partir de la lista del rosco
+-- Si el rosco de pasapalabra tiene una categoria asignada, las preguntas tambien deben tenerla.

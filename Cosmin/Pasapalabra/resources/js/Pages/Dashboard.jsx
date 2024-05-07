@@ -1,3 +1,4 @@
+import NavMenu from '@/Components/NavMenu';
 import PrimaryButton from '@/Components/PrimaryButton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';

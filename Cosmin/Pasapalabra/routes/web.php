@@ -4,6 +4,8 @@ use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\PartidasController;
 use App\Http\Controllers\PasapalabrasController;
 use App\Http\Controllers\PreguntasController;
+use App\Http\Controllers\PreguntasPartidasController;
+use App\Http\Controllers\PreguntasPasapalabrasController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Categoria;
 use App\Models\Pasapalabras;
@@ -40,6 +42,11 @@ Route::resource('pasapalabra', PasapalabrasController::class)
     ->only(['index', 'show', 'create', 'store', 'edit', 'update', 'destroy'])
     ->middleware(['auth']);
 
+Route::resource('preguntas_pasapalabras', PreguntasPasapalabrasController::class)
+    ->only(['index', 'show', 'create', 'store', 'edit', 'update', 'destroy'])
+    ->middleware(['auth']);
+
+
 Route::resource('categoria', CategoriasController::class)
     ->only(['index', 'create', 'show', 'store', 'edit', 'update', 'destroy'])
     ->middleware(['auth']);
@@ -47,7 +54,7 @@ Route::resource('categoria', CategoriasController::class)
 // Route::get('form', [CategoriasController::class, 'form'])->name('categoria.form');
 
 Route::get('aleatorio', [PartidasController::class, 'aleatorio'])->name('partida.aleatorio');
-
+// Route::get('preguntas_pasapalabras/create/{id_pasapalabra}', [PreguntasPartidasController::class, 'create'])->name('preguntas_pasapalabras.create');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

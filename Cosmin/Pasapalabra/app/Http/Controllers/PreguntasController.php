@@ -61,24 +61,37 @@ class PreguntasController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Preguntas $preguntas)
+    public function edit($id_pregunta)
     {
-        //
+        $pregunta = Preguntas::find($id_pregunta);
+        $categorias = Categoria::where('id_usuario', Auth::id())->get(['nombre_categoria', 'id']);
+        return Inertia::render("Pregunta", ['pregunta' => $pregunta, 'categorias' => $categorias]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Preguntas $preguntas)
+    public function update(Request $request, $id_pregunta)
     {
-        //
+        Preguntas::find($id_pregunta)->update([
+            'pregunta' => $request->pregunta,
+            'respuesta' => $request->respuesta,
+            'letra' => $request->letra,
+            'posicion_letra' => $request->posicion_letra,
+            'id_categoria' => $request->id_categoria,
+        ]);
+        return redirect()->route('pregunta.index')->with('message', 'Pregunta modificada correctamente');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Preguntas $preguntas)
+    public function destroy($id_pregunta)
     {
-        //
+        Preguntas::find($id_pregunta)->delete();
+        // dd($id_categoria);
+        // $categoria->delete();
+        return redirect()->route('pregunta.index');
     }
 }

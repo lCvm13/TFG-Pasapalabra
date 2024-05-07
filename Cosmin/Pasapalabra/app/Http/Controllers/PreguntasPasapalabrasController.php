@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categoria;
+use App\Models\Pasapalabras;
+use App\Models\Preguntas;
 use App\Models\preguntas_pasapalabras;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class PreguntasPasapalabrasController extends Controller
 {
@@ -18,9 +23,14 @@ class PreguntasPasapalabrasController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         //
+
+        $pasapalabra =  Pasapalabras::find($request->id_pasapalabra);
+        $preguntas = Preguntas::where('id_usuario', Auth::id())->where('id_categoria', $pasapalabra->id_categoria)->get();
+        $categoria = Categoria::find($pasapalabra->id_categoria);
+        return Inertia::render('PasapalabrasPreguntas', ['pasapalabra' => $pasapalabra, 'preguntas' => $preguntas, 'categoria' => $categoria]);
     }
 
     /**
