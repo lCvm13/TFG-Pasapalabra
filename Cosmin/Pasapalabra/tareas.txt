@@ -34,3 +34,5 @@ PASOS :
 -- Poder modificar cada pregunta del rosco
 -- Poder añadir preguntas a partir de la lista del rosco
 -- Si el rosco de pasapalabra tiene una categoria asignada, las preguntas tambien deben tenerla.
+-- Añadir boton para cambiar los formularios en preguntas_pasapalabras para añadir pregunta nueva ; lo mismo para añadir categoria nueva en preguntas.
+-- Crear el alert en juego pasapalabra para enseñar la respuesta correcta si ha fallado.

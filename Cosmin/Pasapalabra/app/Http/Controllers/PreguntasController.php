@@ -44,7 +44,6 @@ class PreguntasController extends Controller
                 'letra' => 'required|string|max:1',
                 'posicion_letra' => 'required',
                 'id_usuario' => 'required',
-                'id_categoria' => 'required'
             ])
         );
         return to_route('pregunta.index');

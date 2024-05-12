@@ -40,7 +40,8 @@ export default function ListCategorias({ preguntas, categorias, auth }) {
   }
   const valorCategoria = (id) => {
     let valor = categorias.find(element => element.id == id)
-    return valor.nombre_categoria
+    console.log(valor)
+    return valor != undefined ? valor.nombre_categoria : "Sin categoria"
   }
 
   const [paginaActual, setPaginaActual] = useState(1);

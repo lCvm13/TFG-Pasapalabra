@@ -4,13 +4,21 @@ import { router } from "@inertiajs/react"
 import NavMenu from "@/Components/NavMenu";
 export default function Aleatorio({ preguntas, categorias, auth }) {
   const [letterValue, setLetterValue] = useState("a")
+  const [resUsuario, setResUsuario] = useState([])
+
   const setLetter = (letter) => {
+    let pregunta = preguntas.preguntas.find(element => element.letra == letter.toLocaleUpperCase())
+    let respuestaU = resUsuario.find(element => element.letra == letter.toLocaleUpperCase())
+    console.log(resUsuario)
+    if (document.getElementById(letter.toLowerCase()).style.backgroundColor == "red") {
+      alert(`La respuesta correcta es : ${pregunta.respuesta} \nTu respuesta fue : ${respuestaU.respuesta}`)
+    }
     setLetterValue(letter)
   }
   const user = (auth) => {
     return auth.id;
   };
-  console.log(preguntas.preguntas[0].respuesta)
+
 
   const [respuestaUsuario, setRespuestaUsuario] = useState('');
   const [progreso, setProgreso] = useState(0);
@@ -22,6 +30,8 @@ export default function Aleatorio({ preguntas, categorias, auth }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setResUsuario(resUsuario.concat({ letra: preguntas.preguntas[progreso].letra, respuesta: respuestaUsuario }))
+    console.log(resUsuario)
     if (respuestaUsuario.toLowerCase() === preguntas.preguntas[progreso].respuesta.toLowerCase()) {
       document.getElementById(preguntas.preguntas[progreso].letra.toLowerCase()).style.backgroundColor = "green";
     } else {

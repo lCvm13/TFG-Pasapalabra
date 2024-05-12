@@ -18,8 +18,8 @@ class Preguntas extends Model
     {
         return $this->hasOne(Categoria::class);
     }
-    
+
     protected $fillable = [
-        'pregunta', 'respuesta', 'id_categoria','id_usuario','letra','posicion_letra'
+        'pregunta', 'respuesta', 'id_categoria', 'id_usuario', 'letra', 'posicion_letra'
     ];
 }

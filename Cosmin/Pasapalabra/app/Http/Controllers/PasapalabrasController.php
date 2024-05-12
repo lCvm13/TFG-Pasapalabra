@@ -42,15 +42,15 @@ class PasapalabrasController extends Controller
     public function store(Request $request): RedirectResponse
     {
         //
-        Pasapalabras::create(
+        $nuevo_pasapalabra =  Pasapalabras::create(
             $request->validate([
                 'nombre' => 'required|string|max:255',
                 'id_usuario' => 'required'
             ])
         );
-        $nombre_pasap = $request->nombre;
+
         if ($request->url_to != null) {
-            return to_route($request->url_to, ['pasapalabra' => $nombre_pasap]);
+            return to_route($request->url_to, ['pasapalabra' => $nuevo_pasapalabra->id]);
         }
         return to_route('pasapalabra.index');
     }
@@ -84,6 +84,7 @@ class PasapalabrasController extends Controller
         Pasapalabras::find($id_pasapalabra)->update([
             'nombre' => $request->nombre,
             'id_categoria' => $request->id_categoria,
+            'infinito' => $request->infinito,
         ]);
 
         return redirect()->route('pasapalabra.index')->with('message', 'Categoría modificada correctamente');

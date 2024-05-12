@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class preguntas_partidas extends Model
+class Preguntas_Partidas extends Model
 {
     use HasFactory;
-
 }

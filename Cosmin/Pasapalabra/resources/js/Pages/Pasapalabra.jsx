@@ -15,17 +15,19 @@ export default function PasapalabraForm({ categorias, auth, pasapalabra }) {
   const [values, setValues] = useState({
     nombre: pasapalabra.nombre,
     id_categoria: pasapalabra.id_categoria == null ? undefined : pasapalabra.id_categoria,
+    infinito: pasapalabra.infinito,
   })
 
   function handleChange(e) {
     const key = e.target.id
-    const value = e.target.value
+    const value = key == "infinito" ? e.target.checked : e.target.value
+
     setValues(values => ({
       ...values,
       [key]: value
     }))
   }
-
+  console.log(values)
   function handleSubmit(e) {
     e.preventDefault()
     router.post(route("pregunta.store"), values)
@@ -53,6 +55,10 @@ export default function PasapalabraForm({ categorias, auth, pasapalabra }) {
               return <option key={i} value={element.id}>{element.nombre_categoria}</option>
             })}
           </select>
+        </div>
+        <div className="flex flex-row items-center justify-center gap-5">
+          <label htmlFor="cat">Infinito</label>
+          <input type="checkbox" id="infinito" name="infinito" value={values.infinito} onChange={handleChange} />
         </div>
         <button className="border-sky-500 border-solid border-2 w-max p-2 self-center hover:bg-sky-200">Modificar</button>
       </form>
