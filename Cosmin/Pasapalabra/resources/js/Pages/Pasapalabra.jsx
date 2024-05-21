@@ -58,7 +58,7 @@ export default function PasapalabraForm({ categorias, auth, pasapalabra }) {
         </div>
         <div className="flex flex-row items-center justify-center gap-5">
           <label htmlFor="cat">Infinito</label>
-          <input type="checkbox" id="infinito" name="infinito" value={values.infinito} onChange={handleChange} />
+          <input type="checkbox" id="infinito" name="infinito" checked={values.infinito} value={values.infinito} onChange={handleChange} />
         </div>
         <button className="border-sky-500 border-solid border-2 w-max p-2 self-center hover:bg-sky-200">Modificar</button>
       </form>

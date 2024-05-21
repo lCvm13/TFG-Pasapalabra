@@ -50,7 +50,8 @@ class CategoriasController extends Controller
 
         $message = 'Categoria creada con éxito';
         if ($request->url_to != null) {
-            return Inertia::render("Categoria")->with("message", 'Categoria creada con éxito');
+            return
+                redirect()->route($request->url_to, ["message" => $message]);
         }
         return redirect()->route('categoria.index', ["message" => $message]);
     }

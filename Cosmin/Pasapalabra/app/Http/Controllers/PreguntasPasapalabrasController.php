@@ -43,7 +43,6 @@ class PreguntasPasapalabrasController extends Controller
      */
     public function store(Request $request)
     {
-
         PreguntasPasapalabras::create(
             $request->validate([
                 'id_usuario' => 'required',

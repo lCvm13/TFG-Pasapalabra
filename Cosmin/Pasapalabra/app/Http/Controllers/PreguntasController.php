@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use App\Models\Pasapalabras;
 use App\Models\Preguntas;
+use App\Models\PreguntasPasapalabras;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,13 +16,18 @@ class PreguntasController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
 
     {
         // Get all Categorias with id == auth user id.
         $preguntas = Preguntas::where('id_usuario', Auth::id())->get();
         $categorias = Categoria::where('id_usuario', Auth::id())->get(['nombre_categoria', 'id']);
-        return Inertia::render("ListPreguntas", ['preguntas' => $preguntas, 'categorias' => $categorias]);
+        $preguntas_pasapalabra = PreguntasPasapalabras::where('id_usuario', Auth::id())->get();
+        $pasapalabra = Pasapalabras::where('id_usuario', Auth::id())->get();
+        if ($request->message) {
+            return Inertia::render("ListPreguntas", ['preguntas' => $preguntas, 'categorias' => $categorias, 'preguntas_pasapalabra' => $preguntas_pasapalabra, 'pasapalabra' => $pasapalabra])->with('flash', ['message', $request->message]);
+        }
+        return Inertia::render("ListPreguntas", ['preguntas' => $preguntas, 'categorias' => $categorias, 'preguntas_pasapalabra' => $preguntas_pasapalabra, 'pasapalabra' => $pasapalabra]);
     }
 
     /**
@@ -37,6 +44,7 @@ class PreguntasController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+
         Preguntas::create(
             $request->validate([
                 'pregunta' => 'required|string|max:255',
@@ -44,6 +52,7 @@ class PreguntasController extends Controller
                 'letra' => 'required|string|max:1',
                 'posicion_letra' => 'required',
                 'id_usuario' => 'required',
+                'id_categoria' => ''
             ])
         );
         return to_route('pregunta.index');
@@ -89,8 +98,14 @@ class PreguntasController extends Controller
     public function destroy($id_pregunta)
     {
         Preguntas::find($id_pregunta)->delete();
+
+        // $preguntas = Preguntas::where('id_usuario', Auth::id())->get();
+        // $categorias = Categoria::where('id_usuario', Auth::id())->get(['nombre_categoria', 'id']);
+        // return Inertia::render("ListPreguntas", ['preguntas' => $preguntas, 'categorias' => $categorias])->with('flash', ['message' => 'Pregunta borrada con éxito']);
         // dd($id_categoria);
         // $categoria->delete();
-        return redirect()->route('pregunta.index');
+        return redirect()->route('pregunta.index', ["message" => "Pregunta borrada con éxito"]);
+        // return response()->json(['message' => 'Pregunta borrada con éxito']);
+        // return redirect()->route('pregunta.index')->with('flash', ['message', 'Pregunta borrada con éxito']);
     }
 }

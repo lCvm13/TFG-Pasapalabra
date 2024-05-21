@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { router } from "@inertiajs/react"
 import RoscoPasapalabra from "@/Components/RoscoPasapalabra";
 import NavMenu from "@/Components/NavMenu";
+import LetterModal from "@/Components/LetterModal";
 export default function PasapalabraForm({ categoria, auth, pasapalabra, preguntas, preguntasPasapalabra }) {
   const [letterValue, setLetterValue] = useState("a")
   const setLetter = (letter) => {
@@ -39,7 +40,7 @@ export default function PasapalabraForm({ categoria, auth, pasapalabra, pregunta
   const preguntasLetra = preguntas.filter(pregunta => pregunta.letra == letterValue.toLocaleUpperCase())
   function handleSubmit(e) {
     e.preventDefault()
-    // HACER QUE SI YA ESTA INSERTADA UNA PREGUNTA CON ESA LETRA NO DEJARLE INSERTARLA.
+
     const pregunta = preguntas.find(e => e.id == values.id_pregunta)
     if (document.getElementById(pregunta.letra.toLowerCase()).style.backgroundColor == "green" && !pasapalabra.infinito) {
       alert("Ya has insertado esta pregunta para esta letra")
@@ -47,6 +48,19 @@ export default function PasapalabraForm({ categoria, auth, pasapalabra, pregunta
     }
     router.post(route("preguntas_pasapalabras.store"), values)
   }
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  let letters = [];
+
+  preguntasPasapalabra.forEach(element => {
+    let preguntaActual = preguntas.find(item => item.id == element.id_pregunta)
+    letters.push(preguntaActual)
+  });
+  console.log(letters)
+
   return <section className="w-full h-screen grid grid-cols-3">
     <NavMenu user={auth.user}></NavMenu>
     <RoscoPasapalabra letterValue={letterValue} setLetter={setLetter}></RoscoPasapalabra>
@@ -65,6 +79,10 @@ export default function PasapalabraForm({ categoria, auth, pasapalabra, pregunta
         </div>
         <button className="border-sky-500 border-solid border-2 w-max p-2 self-center hover:bg-sky-200">Insertar</button>
       </form>
+
+      <button onClick={handleOpen} className="justify-self-center self-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Ver listado de preguntas</button>
+      <LetterModal open={open} handleClose={handleClose} letters={letters} />
+
     </div>
   </section>
 

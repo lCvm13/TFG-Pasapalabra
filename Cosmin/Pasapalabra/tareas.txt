@@ -36,3 +36,11 @@ PASOS :
 -- Si el rosco de pasapalabra tiene una categoria asignada, las preguntas tambien deben tenerla.
 -- Añadir boton para cambiar los formularios en preguntas_pasapalabras para añadir pregunta nueva ; lo mismo para añadir categoria nueva en preguntas.
 -- Crear el alert en juego pasapalabra para enseñar la respuesta correcta si ha fallado.
+-- Controlar que la pregunta que se crea este bien formualda (que si pone que empieza por la A que empiece su respeusta por al A)
+-- HACER EL EDIT PARA LAS PREGUNTAS
+-- QUE HACER SI CAMBIO EL INFINITO AL ROSCO Y YA TIENE PREGUNTAS INSERTADAS
+-- EN LA LISTA DE PREGUNTAS AÑADIR A QUE ROSCO PERTENECE UNA PREGUNTA.
+-- CREAR ARCHIVO DE FUNCIONES
+-- HACER PASAPALABRAS JUEGO QUE HAGA UNA PREGUNTA AL AZAR POR ROSCO
+-- GUARDAR PROGRESO EN CADA RESPUESTA DEL USUARIO
+-- 

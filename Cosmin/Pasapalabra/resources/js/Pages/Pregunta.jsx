@@ -3,6 +3,7 @@ import { useState } from "react";
 import { router } from "@inertiajs/react"
 import NavMenu from "@/Components/NavMenu";
 export default function Pregunta({ categorias, auth }) {
+
     const [letterValue, setLetterValue] = useState("a")
     const setLetter = (letter) => {
         setLetterValue(letter)
@@ -10,12 +11,33 @@ export default function Pregunta({ categorias, auth }) {
     const user = (auth) => {
         return auth.id;
     };
+    const [categoria, setCategoria] = useState({
+        nombre_categoria: "",
+        id_usuario: user(auth.user),
+        url_to: "pregunta.create"
+    })
+    function handleCat(e) {
+        const key = e.target.id
+        const value = e.target.value
+        setCategoria(categoria => ({
+            ...categoria,
+            [key]: value
+        }))
+    }
+    console.log(categorias)
+    const getCat = () => {
+        console.log(categoria.nombre_categoria)
+        let categoriaBuscar = categorias.find(e => e.nombre_categoria == categoria.nombre_categoria)
+        if (categoriaBuscar == undefined) return
+        return categoriaBuscar.id
+    }
+    const [nueva, setNueva] = useState(false)
     const [values, setValues] = useState({
         pregunta: "",
         respuesta: "",
         letra: "",
         id_usuario: user(auth.user),
-        id_categoria: "",
+        id_categoria: getCat(),
         posicion_letra: ""
     })
 
@@ -32,6 +54,8 @@ export default function Pregunta({ categorias, auth }) {
         e.preventDefault()
         router.post(route("pregunta.store"), values)
     }
+
+
     return <div>
         <NavMenu user={auth.user}></NavMenu>
         <section className="w-full h-screen grid grid-cols-2">
@@ -61,13 +85,22 @@ export default function Pregunta({ categorias, auth }) {
                     </div>
                     <div className="flex flex-row items-center justify-center gap-5">
                         <label htmlFor="cat">Selecciona categoria</label>
-                        <select name="id_categoria" id="id_categoria" value={values.id_categoria} onChange={handleChange}>
-                            <option value="">--</option>
-                            {categorias.map((element, i) => {
-                                return <option key={i} value={element.id}>{element.nombre_categoria}</option>
-                            })}
-                        </select>
+                        {nueva ?
+                            <div className="flex flex-row items-center justify-center gap-5">
+                                <input type="text" name="nombre_categoria" id="nombre_categoria" value={categoria.nombre_categoria} onChange={handleCat}></input>
+                                <span className="text-white w-max p-2 self-center bg-sky-200" onClick={() => router.post(route("categoria.store"), categoria)}>Crear</span></div> :
+                            <select name="id_categoria" id="id_categoria" value={values.id_categoria = getCat()} onChange={handleChange}>
+                                <option value="">--</option>
+                                {categorias.map((element, i) => {
+                                    return <option key={i} value={element.id}>{element.nombre_categoria}</option>
+                                })}
+                            </select>
+                        }
                         <span className="text-sky-400 text-sm">Es opcional</span>
+                    </div>
+                    <div className="flex flex-row items-center justify-center gap-5">
+                        <label htmlFor="cat">¿Categoria nueva?</label>
+                        <input type="checkbox" id="nueva" name="nueva" value={nueva} onChange={() => setNueva(!nueva)} />
                     </div>
                     <button className="border-sky-500 border-solid border-2 w-max p-2 self-center hover:bg-sky-200">Insertar</button>
                 </form>

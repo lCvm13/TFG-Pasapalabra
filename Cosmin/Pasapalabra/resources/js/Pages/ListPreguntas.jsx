@@ -1,46 +1,16 @@
 
 import { useState } from "react";
-import { router } from "@inertiajs/react"
-import { BsPlayCircleFill, BsFillTrash2Fill, BsFillPencilFill } from "react-icons/bs";
+import { router, usePage } from "@inertiajs/react"
+import { BsFillTrash2Fill, BsFillPencilFill } from "react-icons/bs";
 import NavMenu from "@/Components/NavMenu";
 
-export default function ListCategorias({ preguntas, categorias, auth }) {
-  const [letterValue, setLetterValue] = useState("a")
-  const setLetter = (letter) => {
-    setLetterValue(letter)
-  }
+export default function ListCategorias({ preguntas, categorias, auth, preguntas_pasapalabra, pasapalabra }) {
 
+  const { flash } = usePage().props
+  flash != undefined ? alert(flash[1]) : null
 
-  const user = (auth) => {
-    return auth.id;
-  };
-  const [values, setValues] = useState({
-    pregunta: "",
-    respuesta: "",
-    letra: "",
-    id_usuario: user(auth.user),
-    id_categoria: "",
-    posicion_letra: ""
-  })
-
-  function handleChange(e) {
-    const key = e.target.id
-    const value = e.target.value
-    setValues(values => ({
-      ...values,
-      [key]: value
-    }))
-  }
-
-  const destroy = (id) => {
-    if (confirm('Are you sure?')) {
-      router.delete(route("pasapalabra.destroy", id))
-    }
-
-  }
   const valorCategoria = (id) => {
     let valor = categorias.find(element => element.id == id)
-    console.log(valor)
     return valor != undefined ? valor.nombre_categoria : "Sin categoria"
   }
 
@@ -63,13 +33,32 @@ export default function ListCategorias({ preguntas, categorias, auth }) {
   // Función para cambiar a la página siguiente
   const irPaginaSiguiente = () => {
     const totalPages = Math.ceil(preguntas.length / 10);
-
     if (paginaActual < totalPages) {
-
       setPaginaActual(paginaActual + 1);
     }
   };
+  console.log(pasapalabra)
+  console.log(preguntas_pasapalabra)
+  const mostrarPertenencia = (id) => {
+    let valor = preguntas_pasapalabra.find(element => element.id_pregunta == id)
+    console.log(valor)
+    if (valor == undefined) {
+      return alert("No pertenece a ninguna pasapalabra")
+    }
+    let nombre_pasapalabra = pasapalabra.find(element => element.id == valor.id_pasapalabra)
+    return alert(`La pregunta pertenece al rosco: ${nombre_pasapalabra.nombre}`)
+  }
+  const valor = (id) => {
+    let valor = preguntas_pasapalabra.find(element => element.id_pregunta == id)
+    return valor != undefined ? valor : undefined
+  }
 
+  preguntas_pasapalabra.forEach(e => {
+
+    let objeto = document.getElementById(e.id_pregunta)
+    objeto != null ? objeto.style.backgroundColor = "#3a813a38" : "#a7390838"
+    console.log(objeto)
+  });
   return (
     <div>
       <NavMenu user={auth.user}></NavMenu>
@@ -85,20 +74,22 @@ export default function ListCategorias({ preguntas, categorias, auth }) {
               <th>Ultima actualización</th>
               <th></th>
               <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {datosPaginaActual.map((element, i) => {
               return (
-                <tr key={i - 1} className="">
-                  <td key={i}>{element.pregunta}</td>
-                  <td key={i + 1}>{element.respuesta}</td>
-                  <td key={i + 7}>{valorCategoria(element.id_categoria)}</td>
-                  <td key={i + 2}>{element.posicion_letra}</td>
-                  <td key={i + 3}>{element.letra}</td>
-                  <td key={i + 4}>{element.created_at.split("T")[0]}</td>
-                  <td key={i + 5}><button onClick={() => location.href = route("pregunta.edit", element.id)}><BsFillPencilFill /></button></td>
-                  <td key={i + 6}><button onClick={() => router.delete(route("pregunta.destroy", element.id))}><BsFillTrash2Fill /></button></td>
+                <tr key={i} id={element.id}>
+                  <td >{element.pregunta}</td>
+                  <td>{element.respuesta}</td>
+                  <td>{valorCategoria(element.id_categoria)}</td>
+                  <td>{element.posicion_letra}</td>
+                  <td>{element.letra}</td>
+                  <td>{element.created_at.split("T")[0]}</td>
+                  <td><button onClick={() => mostrarPertenencia(element.id)}>?</button></td>
+                  <td><button onClick={() => location.href = route("pregunta.edit", element.id)}><BsFillPencilFill /></button></td>
+                  <td><button onClick={() => router.delete(route("pregunta.destroy", element.id))}><BsFillTrash2Fill /></button></td>
                 </tr>)
             })}
           </tbody>
@@ -110,8 +101,7 @@ export default function ListCategorias({ preguntas, categorias, auth }) {
         <button className="border-solid border-sky-500 border-2 p-2 :hover-sky-200" onClick={() => location.href = route("pregunta.create")}>Crear Pregunta</button>
 
       </section>
-    </div>
-
+    </div >
   );
 
 }
