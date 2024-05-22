@@ -2,9 +2,9 @@ import Pasapalabra from "@/Components/RoscoPasapalabra";
 import { useState } from "react";
 import { router } from "@inertiajs/react"
 import NavMenu from "@/Components/NavMenu";
-export default function Pregunta({ categorias, auth }) {
+export default function Pregunta({ pregunta, categorias, auth }) {
 
-    const [letterValue, setLetterValue] = useState("a")
+    const [letterValue, setLetterValue] = useState(pregunta != undefined ? pregunta.letra : "a")
     const setLetter = (letter) => {
         setLetterValue(letter)
     }
@@ -24,23 +24,23 @@ export default function Pregunta({ categorias, auth }) {
             [key]: value
         }))
     }
-    console.log(categorias)
     const getCat = () => {
-        console.log(categoria.nombre_categoria)
         let categoriaBuscar = categorias.find(e => e.nombre_categoria == categoria.nombre_categoria)
         if (categoriaBuscar == undefined) return
         return categoriaBuscar.id
     }
+    console.log(pregunta)
+
     const [nueva, setNueva] = useState(false)
     const [values, setValues] = useState({
-        pregunta: "",
-        respuesta: "",
-        letra: "",
+        pregunta: pregunta != undefined ? pregunta.pregunta : "",
+        respuesta: pregunta != undefined ? pregunta.respuesta : "",
+        letra: pregunta != undefined ? pregunta.letra : "",
         id_usuario: user(auth.user),
-        id_categoria: getCat(),
-        posicion_letra: ""
+        id_categoria: pregunta != undefined ? pregunta.id_categoria : getCat(),
+        posicion_letra: pregunta != undefined ? pregunta.posicion_letra : ""
     })
-
+    console.log(values.posicion_letra)
     function handleChange(e) {
         const key = e.target.id
         const value = e.target.value
@@ -55,14 +55,17 @@ export default function Pregunta({ categorias, auth }) {
         router.post(route("pregunta.store"), values)
     }
 
-
+    function handleEdit(e) {
+        e.preventDefault()
+        router.patch((`/pregunta/${pregunta.id}`), values)
+    }
     return <div>
         <NavMenu user={auth.user}></NavMenu>
         <section className="w-full h-screen grid grid-cols-2">
             <Pasapalabra letterValue={letterValue} setLetter={setLetter}></Pasapalabra>
             <div className="justify-self-center self-center border-solid border-2 border-sky-500 p-10 flex flex-col gap-10 mr-40 mb-40">
                 <h1 className="text-blue-400 font-extrabold text-4xl">Inserta las preguntas para el PasapaLearning</h1>
-                <form onSubmit={handleSubmit} method="POST" className="flex flex-col gap-10">
+                <form onSubmit={pregunta == undefined ? handleSubmit : handleEdit} method="POST" className="flex flex-col gap-10">
                     <div className="flex flex-row gap-5 items-center">
                         <label className="text-xl" htmlFor="pregunta">Pregunta</label>
                         <input type="text" name="pregunta" id="pregunta" placeholder="¿.....?" value={values.pregunta} onChange={handleChange} className="h-full" />
@@ -78,7 +81,7 @@ export default function Pregunta({ categorias, auth }) {
                         <label htmlFor="pos">Posicion letra</label>
                         <select name="posicion_letra" id="posicion_letra" value={values.posicion_letra} onChange={handleChange}>
                             <option value="">--</option>
-                            <option value="comienzo">comienzo</option>
+                            <option value="empieza">empieza</option>
                             <option value="contiene">contiene</option>
                             <option value="termina">termina</option>
                         </select>
@@ -88,8 +91,9 @@ export default function Pregunta({ categorias, auth }) {
                         {nueva ?
                             <div className="flex flex-row items-center justify-center gap-5">
                                 <input type="text" name="nombre_categoria" id="nombre_categoria" value={categoria.nombre_categoria} onChange={handleCat}></input>
-                                <span className="text-white w-max p-2 self-center bg-sky-200" onClick={() => router.post(route("categoria.store"), categoria)}>Crear</span></div> :
-                            <select name="id_categoria" id="id_categoria" value={values.id_categoria = getCat()} onChange={handleChange}>
+                                <span className="text-white w-max p-2 self-center bg-sky-200 cursor-pointer" onClick={() => router.post(route("categoria.store"), categoria)}>Crear</span></div>
+                            :
+                            <select name="id_categoria" id="id_categoria" value={pregunta == undefined ? values.id_categoria = getCat() : values.id_categoria} onChange={handleChange}>
                                 <option value="">--</option>
                                 {categorias.map((element, i) => {
                                     return <option key={i} value={element.id}>{element.nombre_categoria}</option>

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { router, usePage } from "@inertiajs/react"
 import { BsFillTrash2Fill, BsFillPencilFill } from "react-icons/bs";
 import NavMenu from "@/Components/NavMenu";
@@ -7,7 +7,7 @@ import NavMenu from "@/Components/NavMenu";
 export default function ListCategorias({ preguntas, categorias, auth, preguntas_pasapalabra, pasapalabra }) {
 
   const { flash } = usePage().props
-  flash != undefined ? alert(flash[1]) : null
+  flash.message != undefined ? alert(flash.message) : null
 
   const valorCategoria = (id) => {
     let valor = categorias.find(element => element.id == id)
@@ -37,13 +37,10 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
       setPaginaActual(paginaActual + 1);
     }
   };
-  console.log(pasapalabra)
-  console.log(preguntas_pasapalabra)
   const mostrarPertenencia = (id) => {
     let valor = preguntas_pasapalabra.find(element => element.id_pregunta == id)
-    console.log(valor)
     if (valor == undefined) {
-      return alert("No pertenece a ninguna pasapalabra")
+      return alert("No pertenece a ningun pasapalabra")
     }
     let nombre_pasapalabra = pasapalabra.find(element => element.id == valor.id_pasapalabra)
     return alert(`La pregunta pertenece al rosco: ${nombre_pasapalabra.nombre}`)
@@ -53,12 +50,17 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
     return valor != undefined ? valor : undefined
   }
 
-  preguntas_pasapalabra.forEach(e => {
+  const retorno = (id) => {
+    let valor = preguntas_pasapalabra.find(element => element.id_pregunta == id)
+    return valor != undefined ? "bg-green-100" : ""
+  }
 
-    let objeto = document.getElementById(e.id_pregunta)
-    objeto != null ? objeto.style.backgroundColor = "#3a813a38" : "#a7390838"
-    console.log(objeto)
-  });
+  const destroy = (id) => {
+    router.delete(route("pregunta.destroy", id), {
+      onBefore: () => confirm('¿Estás seguro que quieres borrar este pregunta?. Si esta pregunta esta asignada a un rosco se borrara de éste también.'),
+    })
+  }
+
   return (
     <div>
       <NavMenu user={auth.user}></NavMenu>
@@ -80,7 +82,7 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
           <tbody>
             {datosPaginaActual.map((element, i) => {
               return (
-                <tr key={i} id={element.id}>
+                <tr key={i} className={retorno(element.id)}>
                   <td >{element.pregunta}</td>
                   <td>{element.respuesta}</td>
                   <td>{valorCategoria(element.id_categoria)}</td>
@@ -88,8 +90,8 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
                   <td>{element.letra}</td>
                   <td>{element.created_at.split("T")[0]}</td>
                   <td><button onClick={() => mostrarPertenencia(element.id)}>?</button></td>
-                  <td><button onClick={() => location.href = route("pregunta.edit", element.id)}><BsFillPencilFill /></button></td>
-                  <td><button onClick={() => router.delete(route("pregunta.destroy", element.id))}><BsFillTrash2Fill /></button></td>
+                  <td><button onClick={() => valor(element.id) != undefined ? alert("No puedes editar la pregunta hasta que no la quites del pasapalabras a la que esta asignada.") : location.href = route("pregunta.edit", element.id)}><BsFillPencilFill /></button></td>
+                  <td><button onClick={() => destroy(element.id)}><BsFillTrash2Fill /></button></td>
                 </tr>)
             })}
           </tbody>

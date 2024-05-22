@@ -25,7 +25,7 @@ class PreguntasController extends Controller
         $preguntas_pasapalabra = PreguntasPasapalabras::where('id_usuario', Auth::id())->get();
         $pasapalabra = Pasapalabras::where('id_usuario', Auth::id())->get();
         if ($request->message) {
-            return Inertia::render("ListPreguntas", ['preguntas' => $preguntas, 'categorias' => $categorias, 'preguntas_pasapalabra' => $preguntas_pasapalabra, 'pasapalabra' => $pasapalabra])->with('flash', ['message', $request->message]);
+            return Inertia::render("ListPreguntas", ['preguntas' => $preguntas, 'categorias' => $categorias, 'preguntas_pasapalabra' => $preguntas_pasapalabra, 'pasapalabra' => $pasapalabra])->with('flash', $request->message);
         }
         return Inertia::render("ListPreguntas", ['preguntas' => $preguntas, 'categorias' => $categorias, 'preguntas_pasapalabra' => $preguntas_pasapalabra, 'pasapalabra' => $pasapalabra]);
     }
@@ -88,7 +88,7 @@ class PreguntasController extends Controller
             'posicion_letra' => $request->posicion_letra,
             'id_categoria' => $request->id_categoria,
         ]);
-        return redirect()->route('pregunta.index')->with('message', 'Pregunta modificada correctamente');
+        return redirect()->route('pregunta.index')->with(['message' => 'Pregunta modificada correctamente']);
     }
 
 
@@ -98,14 +98,6 @@ class PreguntasController extends Controller
     public function destroy($id_pregunta)
     {
         Preguntas::find($id_pregunta)->delete();
-
-        // $preguntas = Preguntas::where('id_usuario', Auth::id())->get();
-        // $categorias = Categoria::where('id_usuario', Auth::id())->get(['nombre_categoria', 'id']);
-        // return Inertia::render("ListPreguntas", ['preguntas' => $preguntas, 'categorias' => $categorias])->with('flash', ['message' => 'Pregunta borrada con éxito']);
-        // dd($id_categoria);
-        // $categoria->delete();
-        return redirect()->route('pregunta.index', ["message" => "Pregunta borrada con éxito"]);
-        // return response()->json(['message' => 'Pregunta borrada con éxito']);
-        // return redirect()->route('pregunta.index')->with('flash', ['message', 'Pregunta borrada con éxito']);
+        return redirect()->route('pregunta.index')->with(["message" => "Pregunta borrada con éxito"]);
     }
 }
