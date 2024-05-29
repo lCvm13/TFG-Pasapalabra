@@ -38,39 +38,42 @@ export default function ListCategorias({ categorias, auth }) {
   };
 
   return (
-    <div>
-      <NavMenu user={auth.user}></NavMenu>
-      <section className="flex flex-col  items-center justify-center gap-5 mx-20">
-        <table className="w-10/12 mx-20 my-20 text-center">
-          <thead>
-            <tr>
-              <th>Nombre Categoria</th>
-              <th>Ultima actualización</th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {datosPaginaActual.map((element, i) => {
-              return (
-                <tr key={i - 1} className="">
-                  <td key={i}>{element.nombre_categoria}</td>
-                  <td key={i + 1}>{element.updated_at.split("T")[0]}</td>
-                  <td key={i + 3}><button onClick={() => location.href = route("categoria.edit", element.id)}><BsFillPencilFill /></button></td>
-                  <td key={i + 4}><button onClick={() =>
-                    destroy(element.id)}><BsFillTrash2Fill /></button></td>
-                </tr>)
-            })}
-          </tbody>
-        </table>
-        <div>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={irPaginaAnterior} disabled={paginaActual === 1}>Anterior</button>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={irPaginaSiguiente} disabled={paginaActual === Math.ceil(categorias.length / 10)}>Siguiente</button>
-        </div>
-        <button className="border-solid border-sky-500 border-2 p-2 :hover-sky-200" onClick={() => location.href = route("categoria.create")}>Crear categoria</button>
-      </section>
-    </div>
+    <>
+      <img src="/storage/images/fondo3.jpg" alt="fondo" className="absolute top-0 w-full h-screen opacity-30 pos -z-10" />
+      <div className="z-1">
+        <NavMenu user={auth.user}></NavMenu>
+        <section className="flex flex-col  items-center justify-center gap-5 mx-20 z-10">
+          <table className="w-10/12 mx-20 my-20 text-center">
+            <thead>
+              <tr>
+                <th>Nombre Categoria</th>
+                <th>Ultima actualización</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {datosPaginaActual.map((element, i) => {
+                return (
+                  <tr key={i - 1} className="">
+                    <td key={i}>{element.nombre_categoria}</td>
+                    <td key={i + 1}>{element.updated_at.split("T")[0]}</td>
+                    <td key={i + 3}><button onClick={() => location.href = route("categoria.edit", element.id)}><BsFillPencilFill /></button></td>
+                    <td key={i + 4}><button onClick={() =>
+                      destroy(element.id)}><BsFillTrash2Fill /></button></td>
+                  </tr>)
+              })}
+            </tbody>
+          </table>
+          <div>
+            <button className="bg-royal-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={irPaginaAnterior} disabled={paginaActual === 1}>Anterior</button>
+            <button className="bg-royal-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={irPaginaSiguiente} disabled={paginaActual === Math.ceil(categorias.length / 10)}>Siguiente</button>
+          </div>
+          <button className="border-solid bg-white cursor-pointer border-sky-500 border-2 p-2 hover:bg-sky-200" onClick={() => location.href = route("categoria.create")}>Crear categoria</button>
+        </section>
 
+      </div>
+    </>
   );
 
 }

@@ -7,7 +7,10 @@ import NavMenu from "@/Components/NavMenu";
 export default function ListCategorias({ preguntas, categorias, auth, preguntas_pasapalabra, pasapalabra }) {
 
   const { flash } = usePage().props
-  flash.message != undefined ? alert(flash.message) : null
+  if (flash.message != undefined) {
+    alert(flash.message)
+    flash.message = undefined
+  }
 
   const valorCategoria = (id) => {
     let valor = categorias.find(element => element.id == id)
@@ -21,7 +24,15 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
   const endIndex = startIndex + 10;
 
   // Obtener los datos de la página actual
-  const datosPaginaActual = preguntas.slice(startIndex, endIndex);
+  const datosPaginaActual = preguntas.sort((a, b) => {
+    if (a.letra < b.letra) {
+      return -1;
+    }
+    if (a.letra > b.letra) {
+      return 1;
+    }
+    return 0;
+  }).slice(startIndex, endIndex)
 
   // Función para cambiar a la página anterior
   const irPaginaAnterior = () => {
@@ -52,9 +63,10 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
 
   const retorno = (id) => {
     let valor = preguntas_pasapalabra.find(element => element.id_pregunta == id)
-    return valor != undefined ? "bg-green-100" : ""
+    console.log(valor)
+    return valor != undefined ? "bg-green-300" : ""
   }
-
+  console.log(preguntas_pasapalabra)
   const destroy = (id) => {
     router.delete(route("pregunta.destroy", id), {
       onBefore: () => confirm('¿Estás seguro que quieres borrar este pregunta?. Si esta pregunta esta asignada a un rosco se borrara de éste también.'),
@@ -82,16 +94,16 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
           <tbody>
             {datosPaginaActual.map((element, i) => {
               return (
-                <tr key={i} className={retorno(element.id)}>
-                  <td >{element.pregunta}</td>
-                  <td>{element.respuesta}</td>
-                  <td>{valorCategoria(element.id_categoria)}</td>
-                  <td>{element.posicion_letra}</td>
-                  <td>{element.letra}</td>
-                  <td>{element.created_at.split("T")[0]}</td>
-                  <td><button onClick={() => mostrarPertenencia(element.id)}>?</button></td>
-                  <td><button onClick={() => valor(element.id) != undefined ? alert("No puedes editar la pregunta hasta que no la quites del pasapalabras a la que esta asignada.") : location.href = route("pregunta.edit", element.id)}><BsFillPencilFill /></button></td>
-                  <td><button onClick={() => destroy(element.id)}><BsFillTrash2Fill /></button></td>
+                <tr key={i}>
+                  <td className={retorno(element.id)}>{element.pregunta}</td>
+                  <td className={retorno(element.id)}>{element.respuesta}</td>
+                  <td className={retorno(element.id)}>{valorCategoria(element.id_categoria)}</td>
+                  <td className={retorno(element.id)}>{element.posicion_letra}</td>
+                  <td className={retorno(element.id)}>{element.letra}</td>
+                  <td className={retorno(element.id)}>{element.created_at.split("T")[0]}</td>
+                  <td className={retorno(element.id)}><button onClick={() => mostrarPertenencia(element.id)}>?</button></td>
+                  <td className={retorno(element.id)}><button onClick={() => valor(element.id) != undefined ? alert("No puedes editar la pregunta hasta que no la quites del pasapalabras a la que esta asignada.") : location.href = route("pregunta.edit", element.id)}><BsFillPencilFill /></button></td>
+                  <td className={retorno(element.id)}><button onClick={() => destroy(element.id)}><BsFillTrash2Fill /></button></td>
                 </tr>)
             })}
           </tbody>

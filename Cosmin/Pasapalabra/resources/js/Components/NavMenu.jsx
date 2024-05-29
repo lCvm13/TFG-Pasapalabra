@@ -1,7 +1,7 @@
 
 import { router } from "@inertiajs/react";
 import Swal from 'sweetalert2'
-export default function NavMenu({ user }) {
+export default function NavMenu({ user, color }) {
   const closeNav = () => {
     document.getElementById("mySidenav").style = "width:0";
   }
@@ -63,7 +63,7 @@ export default function NavMenu({ user }) {
         <a href="#" className="closebtn" onClick={() => closeNav()}>&times;</a>
         {<NavBar navBarData={navBarData}></NavBar>}
       </div>
-      <span className="text-4xl m-5 absolute top-0 cursor-pointer" onClick={() => openNav()}>&#9776;</span>
+      <span className="text-4xl m-5 absolute top-0 cursor-pointer" style={{ color: color != undefined ? color : 'black' }} onClick={() => openNav()}>&#9776;</span>
     </aside >
   );
 }

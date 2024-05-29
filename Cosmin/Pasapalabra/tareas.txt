@@ -44,3 +44,8 @@ PASOS :
 -- HACER PASAPALABRAS JUEGO QUE HAGA UNA PREGUNTA AL AZAR POR ROSCO
 -- GUARDAR PROGRESO EN CADA RESPUESTA DEL USUARIO
 -- Poder eliminar preguntas de un pasapalabra
+-- CAMBIAR FORMULARIO DE CATEGORIAS A UN SWEETALERT
+-- Ordenadar por letra o fecha de modificacion
+-- Añadir filtro por letra
+-- Cambiar colores formulario si tenemos que borrar algo.
+

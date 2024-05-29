@@ -9,6 +9,15 @@ export default function PasapalabraForm({ categoria, auth, pasapalabra, pregunta
   const setLetter = (letter) => {
     setLetterValue(letter)
   }
+  const [deleteLetter, setDeleteLetter] = useState(false)
+
+  const destroyLetter = () => {
+    router.delete(route("preguntapasapalabra.destroy", id), {
+      onBefore: () => confirm('¿Estás seguro que quieres borrar este pregunta?. Si esta pregunta esta asignada a un rosco se borrara de éste también.'),
+    })
+  }
+
+
   const user = (auth) => {
     return auth.id;
   };
@@ -38,6 +47,7 @@ export default function PasapalabraForm({ categoria, auth, pasapalabra, pregunta
     }))
   }
   const preguntasLetra = preguntas.filter(pregunta => pregunta.letra == letterValue.toLocaleUpperCase())
+  console.log(preguntasPasapalabra)
   function handleSubmit(e) {
     e.preventDefault()
 
@@ -59,31 +69,50 @@ export default function PasapalabraForm({ categoria, auth, pasapalabra, pregunta
     let preguntaActual = preguntas.find(item => item.id == element.id_pregunta)
     letters.push(preguntaActual)
   });
-  console.log(letters)
 
-  return <section className="w-full h-screen grid grid-cols-3">
-    <NavMenu user={auth.user}></NavMenu>
+  const generateSelect = () => {
+    return deleteLetter ? preguntasPasapalabra : preguntasLetra
+  }
+  return <>
     <RoscoPasapalabra letterValue={letterValue} setLetter={setLetter}></RoscoPasapalabra>
-    <div className="justify-self-center self-center border-solid border-2 border-sky-500 p-10 flex flex-col gap-10 mr-40 mb-40">
-      <h1 className="text-blue-400 font-extrabold text-4xl">Preguntas para la letra {letterValue}</h1>
-      <form onSubmit={handleSubmit} method="POST" className="flex flex-col gap-10">
-        <div className="flex flex-row items-center justify-center gap-5">
-          <label htmlFor="cat">Selecciona una pregunta para la letra</label>
-          <select name="id_pregunta" id="id_pregunta" value={values.id_pregunta} onChange={handleChange}>
-            {preguntasLetra.length == 0 ? <option value="">No hay preguntas para esta letra</option> : <option value="">Selecciona una pregunta</option>}
-            {preguntasLetra.map((pregunta, index) => {
-              return <option key={index} value={pregunta.id}>{pregunta.pregunta}</option>
-            }
-            )}
-          </select>
+    <section className="w-full h-screen grid grid-cols-2">
+      <NavMenu user={auth.user}></NavMenu>
+      <div className="justify-self-center self-center border-solid border-2 border-sky-500 p-10 flex flex-col gap-10 mr-40 mb-40">
+        <div className="flex flex-cols gap-10 self-center">
+          <button onClick={handleOpen} className="justify-self-center self-center px-4 py-2 bg-royal-blue text-white rounded hover:bg-blue-700">Ver listado de preguntas</button>
+          <button onClick={deleteLetter ? () => setDeleteLetter(false) : () => setDeleteLetter(true)} className="justify-self-center self-center px-4 py-2 bg-royal-blue text-white rounded hover:bg-blue-700">{deleteLetter ? 'Añadir preguntas' : 'Borrar preguntas'} </button>
         </div>
-        <button className="border-sky-500 border-solid border-2 w-max p-2 self-center hover:bg-sky-200">Insertar</button>
-      </form>
 
-      <button onClick={handleOpen} className="justify-self-center self-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Ver listado de preguntas</button>
-      <LetterModal open={open} handleClose={handleClose} letters={letters} />
+        <h1 className="text-blue-400 font-extrabold text-4xl">Preguntas {deleteLetter ? "a borrar" : null} para la letra {letterValue.toLocaleUpperCase()}</h1>
+        <form onSubmit={deleteLetter ? destroyLetter : handleSubmit} method="POST" className="flex flex-col gap-10">
+          <div className="flex flex-row items-center justify-center gap-5">
+            <label htmlFor="cat">Selecciona una pregunta por su letra</label>
+            <select name="id_pregunta" id="id_pregunta" value={values.id_pregunta} onChange={handleChange}>
 
-    </div>
-  </section>
+              {preguntasLetra.length == 0 ? <option value="">No hay preguntas para esta letra</option> : <option value="">Selecciona una pregunta</option>}
+              {preguntasLetra.map((pregunta, index) => {
+                if (deleteLetter) {
+                  let preguntaBorrar = preguntasPasapalabra.filter(e => e.id_pregunta == pregunta.id)
+                  console.log(preguntaBorrar)
+                  let preguntaBorrarPregunta = preguntaBorrar.length > 0 ? preguntasLetra.filter(pregunta => pregunta.id == preguntaBorrar[0].id_pregunta) : null
+                  if (preguntaBorrarPregunta != null) {
+                    preguntaBorrarPregunta.map((preguntaABorrar, index) => {
+                      return <option key={index} value={preguntaABorrar.id}>{preguntaABorrar.pregunta}</option>
+                    })
+                  } else {
+                    return <option key={index} value="">No hay preguntas a borrar por esta letra</option>
+                  }
+                }
+                return <option key={index} value={pregunta.id}>{pregunta.pregunta}</option>
+              }
+              )}
+            </select>
+          </div>
+          <button className="border-sky-500 border-solid border-2 w-max p-2 self-center hover:bg-sky-200"> {deleteLetter ? 'Borrar' : 'Insertar'}</button>
+        </form>
+        <LetterModal open={open} handleClose={handleClose} letters={letters} />
 
+      </div>
+    </section>
+  </>
 }

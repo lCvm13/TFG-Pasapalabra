@@ -63,6 +63,7 @@ table {
 
 th,
 td {
+    background-color: #defcf9;
     font-weight: bolder;
     padding: 10px 15px;
     text-align: left;
@@ -70,17 +71,41 @@ td {
 }
 
 th {
-    background-color: #1166c02a;
-    color: #176bcb;
+    background-color: #00bbf0;
+    color: #ffffff;
     text-transform: uppercase;
     font-size: 14px;
     font-weight: bolder;
 }
 
 td {
-    color: #666;
+    color: black;
+    font-weight: bolder;
 }
 
 tr:hover {
     background-color: #f5f5f5;
+}
+
+#principal {
+    background-image: url("/storage/images/fondo.jpg") !important;
+    background-size: cover;
+    background-position: center;
+    top: 0;
+    left: 0;
+    position: absolute;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+}
+
+#principal::before {
+    content: "";
+    background-image: url("/storage/images/fondo.jpg") !important;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.7;
+    z-index: -1;
+    position: absolute;
+
 }

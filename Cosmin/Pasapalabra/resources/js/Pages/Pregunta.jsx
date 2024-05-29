@@ -29,7 +29,6 @@ export default function Pregunta({ pregunta, categorias, auth }) {
         if (categoriaBuscar == undefined) return
         return categoriaBuscar.id
     }
-    console.log(pregunta)
 
     const [nueva, setNueva] = useState(false)
     const [values, setValues] = useState({
@@ -40,7 +39,7 @@ export default function Pregunta({ pregunta, categorias, auth }) {
         id_categoria: pregunta != undefined ? pregunta.id_categoria : getCat(),
         posicion_letra: pregunta != undefined ? pregunta.posicion_letra : ""
     })
-    console.log(values.posicion_letra)
+
     function handleChange(e) {
         const key = e.target.id
         const value = e.target.value
@@ -106,7 +105,7 @@ export default function Pregunta({ pregunta, categorias, auth }) {
                         <label htmlFor="cat">¿Categoria nueva?</label>
                         <input type="checkbox" id="nueva" name="nueva" value={nueva} onChange={() => setNueva(!nueva)} />
                     </div>
-                    <button className="border-sky-500 border-solid border-2 w-max p-2 self-center hover:bg-sky-200">Insertar</button>
+                    <button className="border-sky-500 border-solid border-2 w-max p-2 self-center hover:bg-sky-200">{pregunta != undefined ? "Modificar" : "Insertar"}</button>
                 </form>
             </div>
         </section>
