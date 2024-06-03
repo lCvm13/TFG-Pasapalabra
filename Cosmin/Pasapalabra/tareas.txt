@@ -29,7 +29,7 @@
 PASOS : 
 
 -X Corregir enlaces del menu navegacion
--- Corregir los mensajes para que se muestren tras hacer alguna accion (PARA EL FINAL)
+-x Corregir los mensajes para que se muestren tras hacer alguna accion (PARA EL FINAL)
 -x Añadir lista de preguntas de cada rosco de pasapalabras
 -- Poder modificar cada pregunta del rosco
 -- Poder añadir preguntas a partir de la lista del rosco
@@ -48,4 +48,7 @@ PASOS :
 -- Ordenadar por letra o fecha de modificacion
 -- Añadir filtro por letra
 -- Cambiar colores formulario si tenemos que borrar algo.
-
+-- Añadir progreso a partidas de modo que si un usuario quiere continuar la partida que lo pueda hacer.
+-- Añadir contador a las partidas del rosco opcionalmente
+-- AÑADIR FILTROS PARA TODO
+--

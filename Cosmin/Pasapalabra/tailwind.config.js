@@ -18,7 +18,10 @@ export default {
             },
             colors: {
                 'royal-blue': '#00bbf0'
-            }
+            },
+            backgroundImage: {
+                'pasapalabraImage': "url('/storage/images/fondo5.jpg')",
+            },
         },
     },
 

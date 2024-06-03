@@ -16,6 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string("nombre")->unique();
             $table->boolean("infinito")->default(false);
+            $table->boolean('habilitado')->default(true);
             $table->foreignId("id_categoria")->nullable();
             $table->foreign('id_categoria')->references('id')->on('categorias')->onDelete('cascade');
             $table->foreignId("id_usuario");

@@ -63,13 +63,12 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
 
   const retorno = (id) => {
     let valor = preguntas_pasapalabra.find(element => element.id_pregunta == id)
-    console.log(valor)
     return valor != undefined ? "bg-green-300" : ""
   }
   console.log(preguntas_pasapalabra)
   const destroy = (id) => {
     router.delete(route("pregunta.destroy", id), {
-      onBefore: () => confirm('¿Estás seguro que quieres borrar este pregunta?. Si esta pregunta esta asignada a un rosco se borrara de éste también.'),
+      onBefore: () => confirm('¿Estás seguro que quieres borrar esta pregunta?. Si esta pregunta esta asignada a un rosco se borrara de éste también.'),
     })
   }
 

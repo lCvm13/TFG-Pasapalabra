@@ -32,12 +32,6 @@ export default function Welcome({ auth, laravelVersion, phpVersion, categorias }
             <div id='principal'>
                 <Head title="Welcome" />
                 <div className="bg-gray-50 text-black/50 dark:bg-transparent dark:text-white/50">
-                    {/* <img
-                        id="background"
-                        className="absolute top-0 left-0 w-screen h-screen opacity-70"
-                        // src="https://laravel.com/assets/img/welcome/background.svg"
-                        src="/storage/images/fondo.jpg"
-                    /> */}
                     <div className="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
                         <div className="relative w-full max-w-2xl px-6 lg:max-w-7xl">
                             <NavMenu color={"black"}></NavMenu>

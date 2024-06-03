@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use App\Models\Partidas;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -12,11 +13,12 @@ use Inertia\Inertia;
 class PartidasController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * MUESTRA DE LAS PARTIDAS
      */
     public function index()
     {
-        //
+        $partidas = Partidas::where('id_usuario', Auth::id())->get();
+        return Inertia::render('ListPartidas', ['partidas' => $partidas]);
     }
 
     /**
@@ -24,15 +26,24 @@ class PartidasController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $nuevaPartida =  Partidas::create(
+            $request->validate([
+                'nombre' => 'required|string|max:255',
+                'id_usuario' => 'required'
+            ])
+        );
+
+        if ($request->url_to != null) {
+            return to_route($request->url_to, ['partida' => $nuevaPartida->id]);
+        }
+        return to_route('partida.index');
     }
 
     /**
@@ -44,7 +55,7 @@ class PartidasController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * AQUI ES DONDE SE VA A JUGAR
      */
     public function edit(Partidas $partidas)
     {
@@ -52,7 +63,7 @@ class PartidasController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * AQUI ES DONDE SE VA A MODIFICAR LA PARTIDA
      */
     public function update(Request $request, Partidas $partidas)
     {
@@ -60,12 +71,15 @@ class PartidasController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * ????????????
      */
     public function destroy(Partidas $partidas)
     {
         //
     }
+    /**
+     * JUEGO ALEATORIO DE MOMENTO USANDO UN JSON
+     */
     public function aleatorio()
     {
         $contents = File::get(base_path('public/storage/json/generate.json'));

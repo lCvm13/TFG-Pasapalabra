@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('preguntas_partidas', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string("respuesta_usuario")->nullable();
             $table->foreignId("id_usuario");
             $table->foreignId("id_partida");
             $table->foreignId("id_pregunta");
+            $table->boolean('habilitado')->default(true);
             $table->foreign('id_usuario')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('id_partida')->references('id')->on('partidas')->onDelete('cascade');
             $table->foreign('id_pregunta')->references('id')->on('preguntas')->onDelete('cascade');

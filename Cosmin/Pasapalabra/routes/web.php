@@ -51,6 +51,10 @@ Route::resource('categoria', CategoriasController::class)
     ->only(['index', 'create', 'show', 'store', 'edit', 'update', 'destroy'])
     ->middleware(['auth']);
 
+Route::resource('partida', PartidasController::class)
+    ->only(['index', 'create', 'show', 'store', 'edit', 'update', 'destroy'])
+    ->middleware(['auth']);
+
 // Route::get('form', [CategoriasController::class, 'form'])->name('categoria.form');
 
 Route::get('aleatorio', [PartidasController::class, 'aleatorio'])->name('partida.aleatorio');

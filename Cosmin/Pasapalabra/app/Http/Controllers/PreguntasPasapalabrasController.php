@@ -43,11 +43,11 @@ class PreguntasPasapalabrasController extends Controller
      */
     public function store(Request $request)
     {
-        PreguntasPasapalabras::create(
+        $preguntaCrear = PreguntasPasapalabras::create(
             $request->validate([
                 'id_usuario' => 'required',
                 'id_pasapalabra' => 'required',
-                'id_pregunta' => 'required',
+                'id_pregunta' => 'required|unique:preguntas_pasapalabras',
             ])
         );
         return to_route('preguntas_pasapalabras.create', ['id_pasapalabra' => $request->id_pasapalabra]);
@@ -80,8 +80,9 @@ class PreguntasPasapalabrasController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(preguntaspasapalabras $preguntas_pasapalabras)
+    public function destroy($id_pregunta)
     {
-        //
+        PreguntasPasapalabras::where('id_pregunta', $id_pregunta)->delete();
+        return redirect()->route('preguntas_pasapalabras.index');
     }
 }

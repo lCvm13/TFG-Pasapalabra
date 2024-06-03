@@ -50,7 +50,7 @@ export default function PasapalabraForm({ categorias, auth, pasapalabra }) {
         <div className="flex flex-row items-center justify-center gap-5">
           <label htmlFor="cat">Selecciona categoria del rosco</label>
           <select name="id_categoria" id="id_categoria" value={values.id_categoria} onChange={handleChange}>
-            <option value="">--</option>
+            <option value="">{categorias.length == 0 ? "No existen categorias" : "---"}</option>
             {categorias.map((element, i) => {
               return <option key={i} value={element.id}>{element.nombre_categoria}</option>
             })}

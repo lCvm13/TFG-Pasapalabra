@@ -3,17 +3,17 @@ import React, { useState } from 'react';
 
 
 const LetterModal = ({ open, handleClose, letters }) => {
-  const [selectedLetter, setSelectedLetter] = useState(letters[0].letra);
+  const [selectedLetter, setSelectedLetter] = useState(letters != null ? letters[0].letra : null);
 
   const handleChange = (event) => {
     setSelectedLetter(event.target.value);
   };
 
-  const currentLetter = letters.find((item) => item.letra === selectedLetter);
+  const currentLetter = letters != null ? letters.find((item) => item.letra === selectedLetter) : null;
 
   if (!open) return null;
 
-  return (
+  return letters != null ? (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
       <div className="bg-white rounded-lg p-8 max-w-md w-full text-center">
         <h2 className="text-2xl font-bold mb-4">Listado de preguntas</h2>
@@ -37,7 +37,7 @@ const LetterModal = ({ open, handleClose, letters }) => {
         </button>
       </div>
     </div>
-  );
+  ) : null
 };
 
 export default LetterModal;

@@ -14,14 +14,13 @@ class Partidas extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
     public function partidas_preguntas(): HasMany
     {
         return $this->hasMany(Preguntas::class);
     }
 
-      protected $fillable = [
-        'num_aciertos', 'num_fallados', 'num_sin_contestar'
+    protected $fillable = [
+        'nombre', 'id_usuario', 'habilitado', 'num_aciertos' => 0, 'num_fallados', 'num_sin_contestar'
     ];
 }
-
