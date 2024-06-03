@@ -9,6 +9,7 @@ use App\Models\Preguntas;
 use App\Models\PreguntasPasapalabras;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class PreguntasPasapalabrasController extends Controller
@@ -35,6 +36,9 @@ class PreguntasPasapalabrasController extends Controller
             $categoria = null;
         }
         $preguntas_colorear = PreguntasPasapalabras::where('id_pasapalabra', $request->id_pasapalabra)->get();
+        if ($request->message) {
+            return Inertia::render('PasapalabrasPreguntas', ['pasapalabra' => $pasapalabra, 'preguntas' => $preguntas, 'categoria' => $categoria, 'preguntasPasapalabra' => $preguntas_colorear])->with('flash', $request->message);
+        }
         return Inertia::render('PasapalabrasPreguntas', ['pasapalabra' => $pasapalabra, 'preguntas' => $preguntas, 'categoria' => $categoria, 'preguntasPasapalabra' => $preguntas_colorear]);
     }
 
@@ -47,10 +51,15 @@ class PreguntasPasapalabrasController extends Controller
             $request->validate([
                 'id_usuario' => 'required',
                 'id_pasapalabra' => 'required',
-                'id_pregunta' => 'required|unique:preguntas_pasapalabras',
+                'id_pregunta' => [
+                    'required',
+                    Rule::unique('preguntas_pasapalabras')->where(function ($query) use ($request) {
+                        return $query->where('id_pasapalabra', $request->id_pasapalabra);
+                    }),
+                ],
             ])
         );
-        return to_route('preguntas_pasapalabras.create', ['id_pasapalabra' => $request->id_pasapalabra]);
+        return to_route('preguntas_pasapalabras.create', ['id_pasapalabra' => $request->id_pasapalabra])->with('message', 'Pregunta insertada con éxito');
     }
 
     /**
@@ -80,9 +89,9 @@ class PreguntasPasapalabrasController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id_pregunta)
+    public function destroy(Request $request)
     {
-        PreguntasPasapalabras::where('id_pregunta', $id_pregunta)->delete();
-        return redirect()->route('preguntas_pasapalabras.index');
+        PreguntasPasapalabras::where('id_pregunta', $request->preguntas_pasapalabra)->delete();
+        return redirect()->route('preguntas_pasapalabras.create', ['id_pasapalabra' => $request->id_pasapalabra])->with('message', 'Pregunta eliminada del rosco correctamente.');
     }
 }

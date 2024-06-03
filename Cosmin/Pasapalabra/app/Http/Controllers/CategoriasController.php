@@ -3,23 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
-use Exception;
+use Hamcrest\Arrays\IsArray;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
-use function PHPSTORM_META\map;
 
 class CategoriasController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
 
         $categorias = Categoria::where('id_usuario', Auth::id())->get();
+        if ($request->message) {
+            return Inertia::render("ListCategorias", ['categorias' => $categorias])->with('flash', ['message', $request->message]);
+        }
         return Inertia::render("ListCategorias", ['categorias' => $categorias]);
     }
 
@@ -38,20 +39,18 @@ class CategoriasController extends Controller
     public function store(Request $request): RedirectResponse
     {
         // try {
+
         Categoria::create(
             $request->validate([
                 'nombre_categoria' => 'unique:categorias|required|string|max:255',
                 'id_usuario' => 'required'
             ])
         );
-        // } catch (Exception $e) {
-        //     return redirect()->route('categoria.form', ["message" => "Duplicate entry with name " . $request->nombre_categoria]);
-        // }
-
         $message = 'Categoria creada con éxito';
         if ($request->url_to != null) {
-            return
-                redirect()->route($request->url_to, ["message" => $message]);
+            return !is_array($request->url_to) ?
+                redirect()->route($request->url_to)->with("message", $message) :
+                redirect()->route($request->url_to[0], $request->url_to[1])->with('message', $message);
         }
         return redirect()->route('categoria.index', ["message" => $message]);
     }
@@ -81,8 +80,6 @@ class CategoriasController extends Controller
      */
     public function update(Request $request, $id_categoria)
     {
-        //
-
         $categoria = Categoria::find($id_categoria)->update([
             'nombre_categoria' => $request->nombre_categoria,
         ]);
@@ -95,13 +92,6 @@ class CategoriasController extends Controller
     public function destroy($id_categoria)
     {
         Categoria::find($id_categoria)->delete();
-        // dd($id_categoria);
-        // $categoria->delete();
-        return redirect()->route('categoria.index');
-    }
-
-    public function form()
-    {
-        return Inertia::render("Categoria");
+        return redirect()->route('categoria.index')->with('message', 'Categoria borrada con éxito');
     }
 }

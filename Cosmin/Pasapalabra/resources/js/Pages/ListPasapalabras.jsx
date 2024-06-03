@@ -1,11 +1,16 @@
 import Pasapalabra from "@/Components/RoscoPasapalabra";
 import { useState } from "react";
-import { router } from "@inertiajs/react"
+import { router, usePage } from "@inertiajs/react"
 import { BsPlayCircleFill, BsFillTrash2Fill, BsFillPencilFill, BsPlusCircleFill } from "react-icons/bs";
 import NavMenu from "@/Components/NavMenu";
 import Swal from "sweetalert2";
 
 export default function ListPasapalabra({ pasapalabras, auth, categorias }) {
+  const { flash } = usePage().props
+  if (flash.message != undefined) {
+    alert(flash.message)
+    flash.message = undefined
+  }
   const destroy = (id) => {
     router.delete(`/pasapalabra/${id}`, {
       onBefore: () => confirm('¿Estás seguro que quieres borrar este rosco de pasapalabra?'),

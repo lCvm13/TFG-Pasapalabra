@@ -22,15 +22,15 @@ export default function NavMenu({ user, color }) {
   }
   const navBarData = {
     Categorias: {
-      Index: "categoria.index",
+      Listado: "categoria.index",
       Formulario: "categoria.create"
     },
     Pasapalabra: {
-      Index: "pasapalabra.index",
+      Listado: "pasapalabra.index",
       Formulario: "showForm"
     },
     Preguntas: {
-      Index: "pregunta.index",
+      Listado: "pregunta.index",
       Formulario: "pregunta.create"
     }
   }

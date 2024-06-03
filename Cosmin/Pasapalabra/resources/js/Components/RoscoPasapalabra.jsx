@@ -10,7 +10,7 @@ export default function RoscoPasapalabra({ setLetter, letterValue, className = '
             element.style.top = verticalMovement + "em";
             element.style.left = horizontalMovement + "em";
         });
-    });
+    }, [letterValue]);
 
     return (
         <div>

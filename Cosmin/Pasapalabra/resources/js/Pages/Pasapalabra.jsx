@@ -1,9 +1,14 @@
 import Pasapalabra from "@/Components/RoscoPasapalabra";
 import { useState } from "react";
-import { router } from "@inertiajs/react"
+import { router, usePage } from "@inertiajs/react"
 import RoscoPasapalabra from "@/Components/RoscoPasapalabra";
 import NavMenu from "@/Components/NavMenu";
 export default function PasapalabraForm({ categorias, auth, pasapalabra }) {
+  const { flash } = usePage().props
+  if (flash.message != undefined) {
+    alert(flash.message)
+    flash.message = undefined
+  }
   const [letterValue, setLetterValue] = useState("a")
   const setLetter = (letter) => {
     setLetterValue(letter)
@@ -11,17 +16,35 @@ export default function PasapalabraForm({ categorias, auth, pasapalabra }) {
   const user = (auth) => {
     return auth.id;
   };
+  const [nueva, setNueva] = useState(false)
+  const [categoria, setCategoria] = useState({
+    nombre_categoria: "",
+    id_usuario: user(auth.user),
+    url_to: [`pasapalabra.edit`, pasapalabra.id]
+  })
+  function handleCat(e) {
+    const key = e.target.id
+    const value = e.target.value
+    setCategoria(categoria => ({
+      ...categoria,
+      [key]: value
+    }))
+  }
+  const getCat = () => {
+    let categoriaBuscar = categorias.find(e => e.nombre_categoria == categoria.nombre_categoria)
+    if (categoriaBuscar == undefined) return
+    return categoriaBuscar.id
+  }
   console.log(pasapalabra)
   const [values, setValues] = useState({
     nombre: pasapalabra.nombre,
-    id_categoria: pasapalabra.id_categoria == null ? undefined : pasapalabra.id_categoria,
+    id_categoria: pasapalabra.id_categoria == null ? getCat() : pasapalabra.id_categoria,
     infinito: pasapalabra.infinito,
   })
 
   function handleChange(e) {
     const key = e.target.id
     const value = key == "infinito" ? e.target.checked : e.target.value
-
     setValues(values => ({
       ...values,
       [key]: value
@@ -48,13 +71,24 @@ export default function PasapalabraForm({ categorias, auth, pasapalabra }) {
           <span className="text-sky-400 text-sm">El nombre debe ser único</span>
         </div>
         <div className="flex flex-row items-center justify-center gap-5">
-          <label htmlFor="cat">Selecciona categoria del rosco</label>
-          <select name="id_categoria" id="id_categoria" value={values.id_categoria} onChange={handleChange}>
-            <option value="">{categorias.length == 0 ? "No existen categorias" : "---"}</option>
-            {categorias.map((element, i) => {
-              return <option key={i} value={element.id}>{element.nombre_categoria}</option>
-            })}
-          </select>
+          <label htmlFor="cat">Selecciona categoria</label>
+          {nueva ?
+            <div className="flex flex-row items-center justify-center gap-5">
+              <input type="text" name="nombre_categoria" id="nombre_categoria" value={categoria.nombre_categoria} onChange={handleCat}></input>
+              <span className="text-white w-max p-2 self-center bg-sky-200 cursor-pointer" onClick={() => router.post(route("categoria.store"), categoria)}>Crear</span></div>
+            :
+            <select name="id_categoria" id="id_categoria" value={pasapalabra.id_categoria == undefined ? values.id_categoria = getCat() : values.id_categoria} onChange={handleChange}>
+              <option value="">--</option>
+              {categorias.map((element, i) => {
+                return <option key={i} value={element.id}>{element.nombre_categoria}</option>
+              })}
+            </select>
+          }
+          <span className="text-sky-400 text-sm">Es opcional</span>
+        </div>
+        <div className="flex flex-row items-center justify-center gap-5">
+          <label htmlFor="cat">¿Categoria nueva?</label>
+          <input type="checkbox" id="nueva" name="nueva" value={nueva} onChange={() => setNueva(!nueva)} />
         </div>
         <div className="flex flex-row items-center justify-center gap-5">
           <label htmlFor="cat">Infinito</label>

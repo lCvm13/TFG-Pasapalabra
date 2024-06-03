@@ -33,9 +33,12 @@ class PreguntasController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         $categorias = Categoria::where('id_usuario', Auth::id())->get(['nombre_categoria', 'id']);
+        if ($request->message) {
+            return Inertia::render("Pregunta", ['categorias' => $categorias])->with('flash', $request->message);
+        }
         return Inertia::render("Pregunta", ['categorias' => $categorias]);
     }
 
@@ -69,10 +72,13 @@ class PreguntasController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id_pregunta)
+    public function edit(Request $request)
     {
-        $pregunta = Preguntas::find($id_pregunta);
+        $pregunta = Preguntas::find($request->id_pregunta);
         $categorias = Categoria::where('id_usuario', Auth::id())->get(['nombre_categoria', 'id']);
+        if ($request->message) {
+            return Inertia::render("Pregunta", ['pregunta' => $pregunta, 'categorias' => $categorias])->with('flash', ['message' => $request->message]);
+        }
         return Inertia::render("Pregunta", ['pregunta' => $pregunta, 'categorias' => $categorias]);
     }
 

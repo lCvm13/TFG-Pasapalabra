@@ -6,8 +6,6 @@ use App\Models\Pasapalabras;
 use Illuminate\Http\Request;
 use App\Models\Categoria;
 use App\Models\Preguntas;
-
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
@@ -17,14 +15,13 @@ class PasapalabrasController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        //$categorias = Categoria::where('id', Auth::id())->get(['nombre_categoria', 'id']);
-        //$preguntas = Preguntas::where('id_usuario', Auth::id())->get();
-        //return Inertia::render("Pasapalabra", ['categorias' => $categorias, 'preguntas' => $preguntas]);
         $pasapalabras = Pasapalabras::where('id_usuario', Auth::id())->get();
         $categorias = Categoria::where('id_usuario', Auth::id())->get(['nombre_categoria', 'id']);
+        if ($request->message) {
+            return Inertia::render("ListPasapalabras", ['pasapalabras' => $pasapalabras, 'categorias' => $categorias])->with('flash', ['message', $request->message]);
+        }
         return Inertia::render("ListPasapalabras", ['pasapalabras' => $pasapalabras, 'categorias' => $categorias]);
     }
 
@@ -80,14 +77,13 @@ class PasapalabrasController extends Controller
      */
     public function update(Request $request, $id_pasapalabra)
     {
-
         Pasapalabras::find($id_pasapalabra)->update([
             'nombre' => $request->nombre,
             'id_categoria' => $request->id_categoria,
             'infinito' => $request->infinito,
         ]);
 
-        return redirect()->route('pasapalabra.index')->with('message', 'Categoría modificada correctamente');
+        return redirect()->route('pasapalabra.index')->with('message', 'Rosco modificado correctamente');
     }
 
     /**
@@ -97,6 +93,6 @@ class PasapalabrasController extends Controller
     {
 
         Pasapalabras::find($id_pasapalabra)->delete();
-        return redirect()->route('pasapalabra.index');
+        return redirect()->route('pasapalabra.index')->with('message', 'Rosco borrado con éxito');
     }
 }

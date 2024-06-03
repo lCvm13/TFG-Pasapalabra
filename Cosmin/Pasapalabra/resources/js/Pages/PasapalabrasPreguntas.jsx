@@ -1,10 +1,11 @@
 import Pasapalabra from "@/Components/RoscoPasapalabra";
 import { useEffect, useState } from "react";
-import { router } from "@inertiajs/react"
+import { router, usePage } from "@inertiajs/react"
 import RoscoPasapalabra from "@/Components/RoscoPasapalabra";
 import NavMenu from "@/Components/NavMenu";
 import LetterModal from "@/Components/LetterModal";
-export default function PasapalabraForm({ categoria, auth, pasapalabra, preguntas, preguntasPasapalabra }) {
+export default function PasapalabraRosco({ categoria, auth, pasapalabra, preguntas, preguntasPasapalabra }) {
+  const { flash } = usePage().props
   const [letterValue, setLetterValue] = useState("a")
   const setLetter = (letter) => {
     setLetterValue(letter)
@@ -25,11 +26,24 @@ export default function PasapalabraForm({ categoria, auth, pasapalabra, pregunta
     id_usuario: user(auth.user),
     id_pregunta: ""
   })
-  const letras = document.getElementsByClassName("letter")
-  for (let i = 0; i < letras.length; i++) {
-    letras[i].style = "background-color:darkred"
-  }
   useEffect(() => {
+    if (flash.message != undefined && flash.message != null) {
+      alert(flash.message);
+      // Reset id_pregunta here
+      setValues(prevValues => ({
+        ...prevValues,
+        id_pregunta: ""
+      }));
+      // Reset flash.message to undefined
+      flash.message = undefined;
+    }
+  }, [flash]);
+
+  useEffect(() => {
+    const letras = document.getElementsByClassName("letter")
+    for (let i = 0; i < letras.length; i++) {
+      letras[i].style.backgroundColor = "darkred"
+    }
     if (preguntasPasapalabra != undefined) {
       preguntasPasapalabra.forEach(element => {
         let pregunta_colorear = preguntas.find(e => e.id == element.id_pregunta);
@@ -41,7 +55,7 @@ export default function PasapalabraForm({ categoria, auth, pasapalabra, pregunta
         }
       });
     }
-  }); // Add dependencies to ensure this runs on update
+  }, [preguntasPasapalabra]); // Add dependencies to ensure this runs on update
 
   function handleChange(e) {
     const key = e.target.id
@@ -54,16 +68,19 @@ export default function PasapalabraForm({ categoria, auth, pasapalabra, pregunta
   function handleSubmit(e) {
     e.preventDefault()
     const pregunta = preguntas.find(e => e.id == values.id_pregunta)
+    if (pregunta == undefined) {
+      return alert('No has insertado una pregunta')
+    }
+
     if (document.getElementById(pregunta.letra.toLowerCase()).style.backgroundColor == "green" && !pasapalabra.infinito) {
       alert("Ya has insertado esta pregunta para esta letra")
       return
     }
-    router.post(route("preguntas_pasapalabras.store"), values)
+    router.post(route("preguntas_pasapalabras.store"), values);
   }
-
   const destroyLetter = (e) => {
     e.preventDefault();
-    router.delete(route("preguntas_pasapalabras.destroy", values.id_pregunta), {
+    router.delete(route("preguntas_pasapalabras.destroy", { id_pasapalabra: values.id_pasapalabra, preguntas_pasapalabra: values.id_pregunta }), {
       onBefore: () => confirm('¿Estás seguro que quieres borrar esta pregunta del rosco?'),
     })
   }

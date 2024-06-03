@@ -40,7 +40,6 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
       setPaginaActual(paginaActual - 1);
     }
   };
-
   // Función para cambiar a la página siguiente
   const irPaginaSiguiente = () => {
     const totalPages = Math.ceil(preguntas.length / 10);
@@ -49,12 +48,26 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
     }
   };
   const mostrarPertenencia = (id) => {
-    let valor = preguntas_pasapalabra.find(element => element.id_pregunta == id)
+    let valor = preguntas_pasapalabra.filter(element => element.id_pregunta == id)
+    console.log(valor)
     if (valor == undefined) {
       return alert("No pertenece a ningun pasapalabra")
     }
-    let nombre_pasapalabra = pasapalabra.find(element => element.id == valor.id_pasapalabra)
-    return alert(`La pregunta pertenece al rosco: ${nombre_pasapalabra.nombre}`)
+    let string = ""
+    if (valor.length == 1) {
+      string = "La pregunta pertenece al rosco "
+      valor.map(element => {
+        let nombre_pasapalabra = pasapalabra.find(e => e.id == element.id_pasapalabra)
+        string += nombre_pasapalabra.nombre
+      })
+    } else {
+      string = "La pregunta pertenece los roscos "
+      valor.map(element => {
+        let nombre_pasapalabra = pasapalabra.find(e => e.id == element.id_pasapalabra)
+        string += nombre_pasapalabra.nombre + ", "
+      })
+    }
+    return alert(string.slice(0, string.length - 2))
   }
   const valor = (id) => {
     let valor = preguntas_pasapalabra.find(element => element.id_pregunta == id)

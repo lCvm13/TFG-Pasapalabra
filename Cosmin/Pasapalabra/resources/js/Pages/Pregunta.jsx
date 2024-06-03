@@ -1,9 +1,13 @@
 import Pasapalabra from "@/Components/RoscoPasapalabra";
 import { useState } from "react";
-import { router } from "@inertiajs/react"
+import { router, usePage } from "@inertiajs/react"
 import NavMenu from "@/Components/NavMenu";
 export default function Pregunta({ pregunta, categorias, auth }) {
-
+    const { flash } = usePage().props
+    if (flash.message != undefined) {
+        alert(flash.message)
+        flash.message = undefined
+    }
     const [letterValue, setLetterValue] = useState(pregunta != undefined ? pregunta.letra : "a")
     const setLetter = (letter) => {
         setLetterValue(letter)
@@ -29,7 +33,6 @@ export default function Pregunta({ pregunta, categorias, auth }) {
         if (categoriaBuscar == undefined) return
         return categoriaBuscar.id
     }
-
     const [nueva, setNueva] = useState(false)
     const [values, setValues] = useState({
         pregunta: pregunta != undefined ? pregunta.pregunta : "",

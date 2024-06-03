@@ -1,11 +1,41 @@
 
-import { useState } from "react";
-import { router } from "@inertiajs/react"
+import { useEffect, useState } from "react";
+import { router, usePage } from "@inertiajs/react"
 import { BsPlayCircleFill, BsFillTrash2Fill, BsFillPencilFill } from "react-icons/bs";
 import NavMenu from "@/Components/NavMenu";
-
+import Swal from "sweetalert2";
 export default function ListCategorias({ categorias, auth }) {
+  const { flash } = usePage().props
+  if (flash.message != undefined) {
+    alert(flash.message)
+    flash.message = undefined
+  }
+  const user = (auth) => {
+    return auth.id;
+  };
+  const [values, setValues] = useState({
+    nombre_categoria: "",
+    id_usuario: user(auth.user),
+    url_to: null,
+    id: null
+  })
+  const [isValuesUpdated, setIsValuesUpdated] = useState(false);
 
+  useEffect(() => {
+    if (isValuesUpdated) {
+      showForm(true);
+      setIsValuesUpdated(false);
+    }
+  }, [values, isValuesUpdated]);
+
+  const handleClick = (element) => {
+    setValues(prevValues => ({
+      ...prevValues,
+      nombre_categoria: element.nombre_categoria,
+      id: element.id
+    }));
+    setIsValuesUpdated(true);
+  };
   const destroy = (id) => {
     router.delete(`/categoria/${id}`, {
       onBefore: () => confirm('¿Estás seguro que quieres borrar la categoria?'),
@@ -35,6 +65,32 @@ export default function ListCategorias({ categorias, auth }) {
     }
   };
 
+  const showForm = (edit) => {
+    console.log(values)
+    !edit ?
+      Swal.fire({
+        title: "Inserta el nombre de la nueva categoria",
+        input: 'text',
+        preConfirm: () => {
+          handleSubmitSwal(Swal.getInput()?.value)
+        }
+      }) :
+      Swal.fire({
+        title: `Edita el nombre de ${values.nombre_categoria}`,
+        input: 'text',
+        inputValue: values.nombre_categoria,
+        preConfirm: () => {
+          handleEditSwal(Swal.getInput()?.value)
+        }
+      })
+  }
+
+  function handleEditSwal(newName) {
+    router.patch((`/categoria/${values.id}`), { nombre_categoria: newName, id_usuario: values.id_usuario, url_to: null })
+  }
+  function handleSubmitSwal(nombre) {
+    router.post(route("categoria.store"), { nombre_categoria: nombre, id_usuario: auth.user.id, url_to: null })
+  }
   return (
     <>
       <img src="/storage/images/fondo3.jpg" alt="fondo" className="absolute top-0 w-full h-screen opacity-30 pos -z-10" />
@@ -54,9 +110,11 @@ export default function ListCategorias({ categorias, auth }) {
               {datosPaginaActual.map((element, i) => {
                 return (
                   <tr key={i - 1} className="">
-                    <td key={i}>{element.nombre_categoria}</td>
-                    <td key={i + 1}>{element.updated_at.split("T")[0]}</td>
-                    <td key={i + 3}><button onClick={() => location.href = route("categoria.edit", element.id)}><BsFillPencilFill /></button></td>
+                    <td>{element.nombre_categoria}</td>
+                    <td>{element.updated_at.split("T")[0]}</td>
+                    <td><button onClick={() => {
+                      handleClick(element)
+                    }}><BsFillPencilFill /></button></td>
                     <td key={i + 4}><button onClick={() =>
                       destroy(element.id)}><BsFillTrash2Fill /></button></td>
                   </tr>)
@@ -67,7 +125,7 @@ export default function ListCategorias({ categorias, auth }) {
             <button className="bg-royal-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={irPaginaAnterior} disabled={paginaActual === 1}>Anterior</button>
             <button className="bg-royal-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={irPaginaSiguiente} disabled={paginaActual === Math.ceil(categorias.length / 10)}>Siguiente</button>
           </div>
-          <button className="border-solid bg-white cursor-pointer border-sky-500 border-2 p-2 hover:bg-sky-200" onClick={() => location.href = route("categoria.create")}>Crear categoria</button>
+          <button className="border-solid bg-white cursor-pointer border-sky-500 border-2 p-2 hover:bg-sky-200" onClick={() => showForm(false)}>Crear categoria</button>
         </section>
 
       </div>
