@@ -39,7 +39,6 @@ class CategoriasController extends Controller
     public function store(Request $request): RedirectResponse
     {
         // try {
-
         Categoria::create(
             $request->validate([
                 'nombre_categoria' => 'unique:categorias|required|string|max:255',
@@ -52,7 +51,7 @@ class CategoriasController extends Controller
                 redirect()->route($request->url_to)->with("message", $message) :
                 redirect()->route($request->url_to[0], $request->url_to[1])->with('message', $message);
         }
-        return redirect()->route('categoria.index', ["message" => $message]);
+        return redirect()->route('categoria.index')->with("message", $message);
     }
 
     /**

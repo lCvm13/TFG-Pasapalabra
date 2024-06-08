@@ -21,6 +21,9 @@ export default {
             },
             backgroundImage: {
                 'pasapalabraImage': "url('/storage/images/fondo5.jpg')",
+                'preguntasImage': "url('/storage/images/fondo6.jpg')",
+                'partidasImage': "url('/storage/images/fondo8.jpg')",
+                'categoriasImage': "url('/storage/images/fondo3.jpg')",
             },
         },
     },

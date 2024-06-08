@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use App\Models\Partidas;
+use App\Models\Pasapalabras;
+use App\Models\Preguntas;
+use App\Models\PreguntasPartidas;
+use App\Models\PreguntasPasapalabras;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,10 +19,16 @@ class PartidasController extends Controller
     /**
      * MUESTRA DE LAS PARTIDAS
      */
-    public function index()
+    public function index(Request $request)
     {
         $partidas = Partidas::where('id_usuario', Auth::id())->get();
-        return Inertia::render('ListPartidas', ['partidas' => $partidas]);
+        $preguntas_partida = PreguntasPartidas::where('id_usuario', Auth::id())->get();
+        $preguntas = Preguntas::where('id_usuario', Auth::id())->get();
+        $categorias = Categoria::all();
+        if ($request->message) {
+            return Inertia::render('ListPartidas', ['partidas' => $partidas])->with('flash', ['message', $request->message]);
+        }
+        return Inertia::render('ListPartidas', ['partidas' => $partidas, 'preguntas_partida' => $preguntas_partida, 'preguntas' => $preguntas, 'categorias' => $categorias]);
     }
 
     /**
@@ -33,17 +43,18 @@ class PartidasController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $nuevaPartida =  Partidas::create(
-            $request->validate([
-                'nombre' => 'required|string|max:255',
-                'id_usuario' => 'required'
-            ])
-        );
+        $longitud = PreguntasPasapalabras::where('id_pasapalabra', $request->id_pasapalabra)->count();
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:255|unique:partidas',
+            'id_usuario' => 'required|integer',
+            'id_pasapalabra' => 'required|integer',
+        ]);
 
-        if ($request->url_to != null) {
-            return to_route($request->url_to, ['partida' => $nuevaPartida->id]);
-        }
-        return to_route('partida.index');
+        $validatedData['num_sin_contestar'] = $longitud;
+        // Crear la nueva partida
+        $nuevaPartida = Partidas::create($validatedData);
+        // return to_route('partida.edit', ['id_pasapalabra' => $request->id, 'partida' => $nuevaPartida]);
+        return redirect()->route('partida.edit', ['partida' => $nuevaPartida, 'id_pasapalabra' => $request->id_pasapalabra]);
     }
 
     /**
@@ -57,25 +68,46 @@ class PartidasController extends Controller
     /**
      * AQUI ES DONDE SE VA A JUGAR
      */
-    public function edit(Partidas $partidas)
+    public function edit(Request $request)
     {
-        //
+        $preguntasPasapalabra =  PreguntasPasapalabras::where('id_pasapalabra', $request->id_pasapalabra)->get();
+        $idPreguntas = [];
+        foreach ($preguntasPasapalabra as $pregunta) {
+            array_push($idPreguntas, $pregunta->id_pregunta);
+        }
+        $preguntas = Preguntas::whereIn('id', $idPreguntas)->get();
+        $pasapalabra = Pasapalabras::where('id', $request->id_pasapalabra)->get();
+        $partida = Partidas::where('id', $request->partida)->get();
+        $preguntasProgreso = PreguntasPartidas::where('id_partida', $request->partida)->get();
+        return Inertia::render("Juego", ['preguntas' => $preguntas, 'pasapalabra' => $pasapalabra, 'partida' => $partida[0], 'preguntas_partida' => $preguntasProgreso]);
     }
 
     /**
      * AQUI ES DONDE SE VA A MODIFICAR LA PARTIDA
      */
-    public function update(Request $request, Partidas $partidas)
+    public function update(Request $request, $id_partida)
     {
-        //
+        $updateData = array_filter($request->only(['nombre', 'num_sin_contestar', 'num_aciertos', 'num_fallados']), function ($value) {
+            return !is_null($value);
+        });
+
+        // Buscar la partida por ID
+        $partida = Partidas::find($id_partida);
+
+        if ($partida) {
+            // Actualizar la partida con los datos filtrados
+            $partida->update($updateData);
+        }
+        // return redirect()->back();
     }
 
     /**
      * ????????????
      */
-    public function destroy(Partidas $partidas)
+    public function destroy($id_partida)
     {
-        //
+        Partidas::find($id_partida)->delete();
+        return redirect()->route('partida.index')->with('message', 'Partida borrada con éxito');
     }
     /**
      * JUEGO ALEATORIO DE MOMENTO USANDO UN JSON

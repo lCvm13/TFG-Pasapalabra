@@ -21,6 +21,6 @@ class Partidas extends Model
     }
 
     protected $fillable = [
-        'nombre', 'id_usuario', 'habilitado', 'num_aciertos' => 0, 'num_fallados', 'num_sin_contestar'
+        'nombre', 'id_usuario', 'habilitado', 'num_aciertos', 'num_fallados', 'num_sin_contestar', 'id_pasapalabra'
     ];
 }

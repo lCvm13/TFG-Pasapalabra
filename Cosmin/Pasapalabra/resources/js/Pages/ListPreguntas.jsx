@@ -10,6 +10,7 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
   if (flash.message != undefined) {
     alert(flash.message)
     flash.message = undefined
+    window.location.reload();
   }
 
   const valorCategoria = (id) => {
@@ -49,8 +50,8 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
   };
   const mostrarPertenencia = (id) => {
     let valor = preguntas_pasapalabra.filter(element => element.id_pregunta == id)
-    console.log(valor)
-    if (valor == undefined) {
+    console.log(valor);
+    if (valor.length == 0) {
       return alert("No pertenece a ningun pasapalabra")
     }
     let string = ""
@@ -78,7 +79,6 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
     let valor = preguntas_pasapalabra.find(element => element.id_pregunta == id)
     return valor != undefined ? "bg-green-300" : ""
   }
-  console.log(preguntas_pasapalabra)
   const destroy = (id) => {
     router.delete(route("pregunta.destroy", id), {
       onBefore: () => confirm('¿Estás seguro que quieres borrar esta pregunta?. Si esta pregunta esta asignada a un rosco se borrara de éste también.'),
@@ -86,10 +86,10 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
   }
 
   return (
-    <div>
+    <div className="min-h-svh min-w-svw bg-preguntasImage fondos before:opacity-50">
       <NavMenu user={auth.user}></NavMenu>
-      <section className="flex flex-col  items-center justify-center gap-5 mx-20">
-        <table className="w-10/12 mx-20 my-20 text-center">
+      <section className="flex flex-col  items-center justify-center gap-5">
+        <table className="w-10/12  my-20 text-center">
           <thead>
             <tr>
               <th>Pregunta</th>

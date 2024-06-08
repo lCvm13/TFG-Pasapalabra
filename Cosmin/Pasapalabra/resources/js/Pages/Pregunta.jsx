@@ -39,10 +39,9 @@ export default function Pregunta({ pregunta, categorias, auth }) {
         respuesta: pregunta != undefined ? pregunta.respuesta : "",
         letra: pregunta != undefined ? pregunta.letra : "",
         id_usuario: user(auth.user),
-        id_categoria: pregunta != undefined ? pregunta.id_categoria : getCat(),
-        posicion_letra: pregunta != undefined ? pregunta.posicion_letra : ""
+        id_categoria: pregunta != undefined ? pregunta.id_categoria ?? getCat() : getCat(),
+        posicion_letra: pregunta != undefined ? pregunta.posicion_letra.toLocaleLowerCase() : ""
     })
-
     function handleChange(e) {
         const key = e.target.id
         const value = e.target.value
@@ -61,11 +60,11 @@ export default function Pregunta({ pregunta, categorias, auth }) {
         e.preventDefault()
         router.patch((`/pregunta/${pregunta.id}`), values)
     }
-    return <div>
-        <NavMenu user={auth.user}></NavMenu>
+    return <div className="min-h-svh min-w-svw bg-preguntasImage fondos before:opacity-50">
+        <NavMenu user={auth.user} />
         <section className="w-full h-screen grid grid-cols-2">
             <Pasapalabra letterValue={letterValue} setLetter={setLetter}></Pasapalabra>
-            <div className="justify-self-center self-center border-solid border-2 border-sky-500 p-10 flex flex-col gap-10 mr-40 mb-40">
+            <div className="bg-white justify-self-center self-center border-solid border-2 border-sky-500 p-10 flex flex-col gap-10 mr-40 mb-40">
                 <h1 className="text-blue-400 font-extrabold text-4xl">Inserta las preguntas para el PasapaLearning</h1>
                 <form onSubmit={pregunta == undefined ? handleSubmit : handleEdit} method="POST" className="flex flex-col gap-10">
                     <div className="flex flex-row gap-5 items-center">

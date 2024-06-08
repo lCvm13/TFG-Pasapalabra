@@ -9,6 +9,7 @@ use App\Http\Controllers\PreguntasPasapalabrasController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Categoria;
 use App\Models\Pasapalabras;
+use App\Models\Preguntas_Partidas;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -55,6 +56,9 @@ Route::resource('partida', PartidasController::class)
     ->only(['index', 'create', 'show', 'store', 'edit', 'update', 'destroy'])
     ->middleware(['auth']);
 
+Route::resource('preguntas_partidas', PreguntasPartidasController::class)
+    ->only(['index', 'create', 'show', 'store', 'edit', 'update', 'destroy'])
+    ->middleware(['auth']);
 // Route::get('form', [CategoriasController::class, 'form'])->name('categoria.form');
 
 Route::get('aleatorio', [PartidasController::class, 'aleatorio'])->name('partida.aleatorio');

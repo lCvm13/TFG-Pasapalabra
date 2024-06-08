@@ -72,13 +72,10 @@ class PreguntasController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request)
+    public function edit($id_pregunta)
     {
-        $pregunta = Preguntas::find($request->id_pregunta);
+        $pregunta = Preguntas::find($id_pregunta);
         $categorias = Categoria::where('id_usuario', Auth::id())->get(['nombre_categoria', 'id']);
-        if ($request->message) {
-            return Inertia::render("Pregunta", ['pregunta' => $pregunta, 'categorias' => $categorias])->with('flash', ['message' => $request->message]);
-        }
         return Inertia::render("Pregunta", ['pregunta' => $pregunta, 'categorias' => $categorias]);
     }
 

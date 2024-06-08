@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\preguntas_partidas;
+use App\Models\PreguntasPartidas;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class PreguntasPartidasController extends Controller
@@ -28,13 +29,24 @@ class PreguntasPartidasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $preguntas = PreguntasPartidas::create($request->validate([
+            'respuesta_usuario' => 'required|string|max:255',
+            'id_usuario' => 'required',
+            'id_pregunta' => [
+                'required',
+                Rule::unique('preguntas_partidas')->where(function ($query) use ($request) {
+                    return $query->where('id_partida', $request->id_partida);
+                }),
+            ],
+            'id_partida' => 'required'
+        ]));
+        // return redirect()->route('partida.edit', ['id_pasapalabra' => $request->id, 'partida' => $request->id_partida]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(preguntas_partidas $preguntas_partidas)
+    public function show(PreguntasPartidas $preguntas_partidas)
     {
         //
     }
@@ -42,7 +54,7 @@ class PreguntasPartidasController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(preguntas_partidas $preguntas_partidas)
+    public function edit(PreguntasPartidas $preguntas_partidas)
     {
         //
     }
@@ -50,7 +62,7 @@ class PreguntasPartidasController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, preguntas_partidas $preguntas_partidas)
+    public function update(Request $request, PreguntasPartidas $preguntas_partidas)
     {
         //
     }
@@ -58,7 +70,7 @@ class PreguntasPartidasController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(preguntas_partidas $preguntas_partidas)
+    public function destroy(PreguntasPartidas $preguntas_partidas)
     {
         //
     }

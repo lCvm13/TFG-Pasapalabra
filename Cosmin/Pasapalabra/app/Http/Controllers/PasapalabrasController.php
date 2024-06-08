@@ -6,6 +6,7 @@ use App\Models\Pasapalabras;
 use Illuminate\Http\Request;
 use App\Models\Categoria;
 use App\Models\Preguntas;
+use App\Models\PreguntasPasapalabras;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
@@ -19,10 +20,11 @@ class PasapalabrasController extends Controller
     {
         $pasapalabras = Pasapalabras::where('id_usuario', Auth::id())->get();
         $categorias = Categoria::where('id_usuario', Auth::id())->get(['nombre_categoria', 'id']);
+        $preguntas_pasapalabra = PreguntasPasapalabras::where('id_usuario', Auth::id())->get();
         if ($request->message) {
             return Inertia::render("ListPasapalabras", ['pasapalabras' => $pasapalabras, 'categorias' => $categorias])->with('flash', ['message', $request->message]);
         }
-        return Inertia::render("ListPasapalabras", ['pasapalabras' => $pasapalabras, 'categorias' => $categorias]);
+        return Inertia::render("ListPasapalabras", ['pasapalabras' => $pasapalabras, 'categorias' => $categorias, 'preguntas_pasapalabra' => $preguntas_pasapalabra]);
     }
 
     /**

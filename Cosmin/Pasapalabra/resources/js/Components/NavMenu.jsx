@@ -8,22 +8,40 @@ export default function NavMenu({ user, color }) {
   const openNav = () => {
     document.getElementById("mySidenav").style = "width:250px";
   }
-  const showForm = () => {
-    Swal.fire({
-      title: "Inserta el nombre del Pasapalabra nuevo",
-      input: 'text',
-      preConfirm: () => {
-        handleSubmit(Swal.getInput()?.value)
-      }
-    })
+  const showForm = (titulo) => {
+    if (titulo == "Pasapalabra") {
+      Swal.fire({
+        title: "Inserta el nombre del Pasapalabra nuevo",
+        input: 'text',
+        preConfirm: () => {
+          handleSubmit(Swal.getInput()?.value)
+        }
+      })
+    } else {
+      Swal.fire({
+        title: "Inserta el nombre de la categoria nueva",
+        input: 'text',
+        preConfirm: () => {
+          handleSubmitSwal(Swal.getInput()?.value)
+        }
+      })
+    }
+
   }
   function handleSubmit(nombre) {
     router.post(route("pasapalabra.store"), { nombre: nombre, id_usuario: user.id, url_to: "pasapalabra.edit" })
   }
+  function handleSubmitSwal(nombre) {
+    router.post(route("categoria.store"), { nombre_categoria: nombre, id_usuario: user.id, url_to: null })
+  }
   const navBarData = {
+    Inicio: {
+      Home: "index",
+      Introduccion: "dashboard"
+    },
     Categorias: {
       Listado: "categoria.index",
-      Formulario: "categoria.create"
+      Formulario: "showForm"
     },
     Pasapalabra: {
       Listado: "pasapalabra.index",
@@ -32,6 +50,9 @@ export default function NavMenu({ user, color }) {
     Preguntas: {
       Listado: "pregunta.index",
       Formulario: "pregunta.create"
+    },
+    Partidas: {
+      Listado: "partida.index"
     }
   }
 
@@ -46,7 +67,7 @@ export default function NavMenu({ user, color }) {
             <ul>
               {Object.entries(enlaces).map(([nombre, valor]) => (
                 <li key={nombre}>
-                  <a href={valor != "showForm" ? route(valor) : "#"} onClick={valor != "showForm" ? null : () => showForm()}>{nombre}</a>
+                  <a href={valor != "showForm" ? route(valor) : "#"} onClick={valor != "showForm" ? null : () => showForm(titulo)}>{nombre}</a>
                 </li>
               ))}
             </ul>

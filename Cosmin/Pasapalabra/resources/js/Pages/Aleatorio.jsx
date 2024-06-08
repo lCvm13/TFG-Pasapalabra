@@ -31,7 +31,6 @@ export default function Aleatorio({ preguntas, categorias, auth }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setResUsuario(resUsuario.concat({ letra: preguntas.preguntas[progreso].letra, respuesta: respuestaUsuario }))
-    console.log(resUsuario)
     if (respuestaUsuario.toLowerCase() === preguntas.preguntas[progreso].respuesta.toLowerCase()) {
       document.getElementById(preguntas.preguntas[progreso].letra.toLowerCase()).style.backgroundColor = "green";
     } else {
@@ -41,8 +40,8 @@ export default function Aleatorio({ preguntas, categorias, auth }) {
     setRespuestaUsuario('');
   }
 
-  return <div>
-    <NavMenu user={auth.user}></NavMenu>
+  return <div className="min-h-svh min-w-svw bg-partidasImage fondos before:opacity-50" >
+    <NavMenu user={auth.user} color={"white"}></NavMenu>
     <section className="w-full h-screen grid grid-cols-2 ">
       <Pasapalabra letterValue={letterValue} setLetter={setLetter}></Pasapalabra>
       <div className="flex flex-col max-w-md mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 self-center gap-5">

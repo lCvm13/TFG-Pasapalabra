@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { router, usePage } from "@inertiajs/react"
-import { BsPlayCircleFill, BsFillTrash2Fill, BsFillPencilFill } from "react-icons/bs";
+import { BsFillTrash2Fill, BsFillPencilFill } from "react-icons/bs";
 import NavMenu from "@/Components/NavMenu";
 import Swal from "sweetalert2";
 export default function ListCategorias({ categorias, auth }) {
@@ -9,6 +9,7 @@ export default function ListCategorias({ categorias, auth }) {
   if (flash.message != undefined) {
     alert(flash.message)
     flash.message = undefined
+    window.location.reload();
   }
   const user = (auth) => {
     return auth.id;
@@ -19,6 +20,45 @@ export default function ListCategorias({ categorias, auth }) {
     url_to: null,
     id: null
   })
+  const [nombreAsc, setNombreAsc] = useState(false);
+  const [sortedCategorias, setSortedCategorias] = useState(categorias);
+  useEffect(() => {
+    const sortedData = [...sortedCategorias].sort((a, b) => {
+      if (a.updated_at < b.updated_at) {
+        return 1;
+      }
+      if (a.updated_at > b.updated_at) {
+        return -1;
+      }
+      return 0;
+    });
+    setSortedCategorias(sortedData);
+  }, []);
+
+  const orderByName = () => {
+    const sortedData = [...sortedCategorias].sort((a, b) => {
+      if (nombreAsc) {
+        return a.nombre_categoria.localeCompare(b.nombre_categoria);
+      } else {
+        return b.nombre_categoria.localeCompare(a.nombre_categoria);
+      }
+    });
+    setNombreAsc(!nombreAsc);
+    setSortedCategorias(sortedData);
+  };
+  // --------------------------------------------------------- //
+  const [dateAsc, setDateAsc] = useState(false);
+  const orderByDate = () => {
+    const sortedData = [...sortedCategorias].sort((a, b) => {
+      if (dateAsc) {
+        return new Date(a.updated_at) - new Date(b.updated_at);
+      } else {
+        return new Date(b.updated_at) - new Date(a.updated_at);
+      }
+    });
+    setDateAsc(!dateAsc);
+    setSortedCategorias(sortedData);
+  };
   const [isValuesUpdated, setIsValuesUpdated] = useState(false);
 
   useEffect(() => {
@@ -48,7 +88,7 @@ export default function ListCategorias({ categorias, auth }) {
   const endIndex = startIndex + 10;
 
   // Obtener los datos de la página actual
-  const datosPaginaActual = categorias.slice(startIndex, endIndex);
+  const datosPaginaActual = sortedCategorias.slice(startIndex, endIndex);
 
   // Función para cambiar a la página anterior
   const irPaginaAnterior = () => {
@@ -59,14 +99,14 @@ export default function ListCategorias({ categorias, auth }) {
 
   // Función para cambiar a la página siguiente
   const irPaginaSiguiente = () => {
-    const totalPages = Math.ceil(categorias.length / 10);
+    const totalPages = Math.ceil(sortedCategorias.length / 10);
     if (paginaActual < totalPages) {
       setPaginaActual(paginaActual + 1);
     }
   };
 
   const showForm = (edit) => {
-    console.log(values)
+    sortedCategorias
     !edit ?
       Swal.fire({
         title: "Inserta el nombre de la nueva categoria",
@@ -92,16 +132,15 @@ export default function ListCategorias({ categorias, auth }) {
     router.post(route("categoria.store"), { nombre_categoria: nombre, id_usuario: auth.user.id, url_to: null })
   }
   return (
-    <>
-      <img src="/storage/images/fondo3.jpg" alt="fondo" className="absolute top-0 w-full h-screen opacity-30 pos -z-10" />
+    <div className="min-h-svh min-w-svw bg-categoriasImage fondos before:opacity-50" >
       <div className="z-1">
-        <NavMenu user={auth.user}></NavMenu>
-        <section className="flex flex-col  items-center justify-center gap-5 mx-20 z-10">
-          <table className="w-10/12 mx-20 my-20 text-center">
+        <NavMenu user={auth.user} color={"white"}></NavMenu>
+        <section className="flex flex-col items-center justify-center gap-5 mx-20 z-10">
+          <table className="w-10/12 mx-20 mt-28 text-center">
             <thead>
               <tr>
-                <th>Nombre Categoria</th>
-                <th>Ultima actualización</th>
+                <th className="cursor-pointer" onClick={orderByName}>Nombre Categoria</th>
+                <th className="cursor-pointer" onClick={orderByDate}>Ultima actualización</th>
                 <th></th>
                 <th></th>
               </tr>
@@ -123,13 +162,13 @@ export default function ListCategorias({ categorias, auth }) {
           </table>
           <div>
             <button className="bg-royal-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={irPaginaAnterior} disabled={paginaActual === 1}>Anterior</button>
-            <button className="bg-royal-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={irPaginaSiguiente} disabled={paginaActual === Math.ceil(categorias.length / 10)}>Siguiente</button>
+            <button className="bg-royal-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={irPaginaSiguiente} disabled={paginaActual === Math.ceil(sortedCategorias.length / 10)}>Siguiente</button>
           </div>
           <button className="border-solid bg-white cursor-pointer border-sky-500 border-2 p-2 hover:bg-sky-200" onClick={() => showForm(false)}>Crear categoria</button>
         </section>
 
       </div>
-    </>
+    </div>
   );
 
 }

@@ -105,7 +105,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, categorias }
                                             <div id="docs-card-content" className="flex items-start gap-6 lg:flex-col">
                                                 <div className="pt-3 sm:pt-5 lg:pt-0">
                                                     <h2 className="text-xl font-semibold text-black dark:text-white">
-                                                        Jugar a pasapalabra
+                                                        Probar pasapalabra
                                                     </h2>
 
 

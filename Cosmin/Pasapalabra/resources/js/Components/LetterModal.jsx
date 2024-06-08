@@ -28,7 +28,7 @@ const LetterModal = ({ open, handleClose, letters }) => {
             </option>
           ))}
         </select>
-        <p className="mb-4">Pregunta: {currentLetter.pregunta}</p>
+        <p className="mb-4">Pregunta: {currentLetter?.pregunta}</p>
         <button
           onClick={handleClose}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
@@ -37,7 +37,7 @@ const LetterModal = ({ open, handleClose, letters }) => {
         </button>
       </div>
     </div>
-  ) : null
+  ) : alert('No hay preguntas que enseñar');
 };
 
 export default LetterModal;
