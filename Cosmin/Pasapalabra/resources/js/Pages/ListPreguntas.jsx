@@ -23,17 +23,107 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
   // Calcular el índice de inicio y fin para los elementos de la página actual
   const startIndex = (paginaActual - 1) * 10;
   const endIndex = startIndex + 10;
+  const [preguntaAsc, setPreguntaAsc] = useState(false);
+  const [sortedPreguntas, setSortedPreguntas] = useState(preguntas);
+
+  useEffect(() => {
+    const sortedData = [...sortedPreguntas].sort((a, b) => {
+      return a.letra.localeCompare(b.letra);
+
+    });
+    setSortedPreguntas(sortedData);
+  }, []);
+
+  const orderByPregunta = () => {
+    const sortedData = [...sortedPreguntas].sort((a, b) => {
+      if (preguntaAsc) {
+        return a.pregunta.localeCompare(b.pregunta);
+      } else {
+        return b.pregunta.localeCompare(a.pregunta);
+      }
+    });
+    setPreguntaAsc(!preguntaAsc);
+    setSortedPreguntas(sortedData);
+  };
+
+  // ---------------------------------------------------------------------------- //
+  const [dateAsc, setDateAsc] = useState(false);
+  const orderByDate = () => {
+    const sortedData = [...sortedPreguntas].sort((a, b) => {
+      if (dateAsc) {
+        return new Date(a.updated_at) - new Date(b.updated_at);
+      } else {
+        return new Date(b.updated_at) - new Date(a.updated_at);
+      }
+    });
+    setDateAsc(!dateAsc);
+    setSortedPreguntas(sortedData);
+  };
+  // ---------------------------------------------------------------------------- //
+  const [respuestaAsc, setRepuestaAsc] = useState(false);
+  const orderByRespuesta = () => {
+    const sortedData = [...sortedPreguntas].sort((a, b) => {
+      if (respuestaAsc) {
+        return a.respuesta.localeCompare(b.respuesta);
+      } else {
+        return b.respuesta.localeCompare(a.respuesta);
+      }
+    });
+    setRepuestaAsc(!respuestaAsc);
+    setSortedPreguntas(sortedData);
+  };
+  // ---------------------------------------------------------------------------- //
+  const [letraAsc, setLetraAsc] = useState(false);
+  const orderByLetra = () => {
+    const sortedData = [...sortedPreguntas].sort((a, b) => {
+      if (letraAsc) {
+        return a.letra.localeCompare(b.letra);
+      } else {
+        return b.letra.localeCompare(a.letra);
+      }
+    });
+    setLetraAsc(!letraAsc);
+    setSortedPreguntas(sortedData);
+  };
+  // ---------------------------------------------------------------------------- //
+  const [catAsc, setCatAsc] = useState(false);
+  const orderByCat = () => {
+    const sortedData = [...sortedPreguntas].sort((a, b) => {
+      const catA = categorias.find(e => e.id === a.id_categoria);
+      const catB = categorias.find(e => e.id === b.id_categoria);
+
+      // Check if either catA or catB is undefined and handle accordingly
+      if (!catA && !catB) return 0;
+      if (!catA) return catAsc ? 1 : -1;
+      if (!catB) return catAsc ? -1 : 1;
+
+      if (catAsc) {
+        return catA.nombre_categoria.localeCompare(catB.nombre_categoria);
+      } else {
+        return catB.nombre_categoria.localeCompare(catA.nombre_categoria);
+      }
+    });
+
+    setCatAsc(!catAsc);
+    setSortedPreguntas(sortedData);
+  };
+
+  //---------------------------------------------------------------------------------//
+  const [posicionLetraAsc, setPosicionLetraAsc] = useState(false);
+  const orderByLetraPos = () => {
+    const sortedData = [...sortedPreguntas].sort((a, b) => {
+      if (posicionLetraAsc) {
+        return a.posicion_letra.localeCompare(b.posicion_letra);
+      } else {
+        return b.posicion_letra.localeCompare(a.posicion_letra);
+      }
+    });
+    setPosicionLetraAsc(!posicionLetraAsc);
+    setSortedPreguntas(sortedData);
+  };
 
   // Obtener los datos de la página actual
-  const datosPaginaActual = preguntas.sort((a, b) => {
-    if (a.letra < b.letra) {
-      return -1;
-    }
-    if (a.letra > b.letra) {
-      return 1;
-    }
-    return 0;
-  }).slice(startIndex, endIndex)
+  const datosPaginaActual = sortedPreguntas.slice(startIndex, endIndex)
 
   // Función para cambiar a la página anterior
   const irPaginaAnterior = () => {
@@ -92,12 +182,12 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
         <table className="w-10/12  my-20 text-center">
           <thead>
             <tr>
-              <th>Pregunta</th>
-              <th>Respuesta</th>
-              <th>Categoria</th>
-              <th>Posición de la letra</th>
-              <th>Letra</th>
-              <th>Ultima actualización</th>
+              <th className="cursor-pointer" onClick={orderByPregunta}>Pregunta</th>
+              <th className="cursor-pointer" onClick={orderByRespuesta}>Respuesta</th>
+              <th className="cursor-pointer" onClick={orderByCat}>Categoria</th>
+              <th className="cursor-pointer" onClick={orderByLetra}>Letra</th>
+              <th className="cursor-pointer" onClick={orderByLetraPos}>Posición de la letra</th>
+              <th className="cursor-pointer" onClick={orderByDate}>Ultima actualización</th>
               <th></th>
               <th></th>
               <th></th>
@@ -110,9 +200,9 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
                   <td className={retorno(element.id)}>{element.pregunta}</td>
                   <td className={retorno(element.id)}>{element.respuesta}</td>
                   <td className={retorno(element.id)}>{valorCategoria(element.id_categoria)}</td>
-                  <td className={retorno(element.id)}>{element.posicion_letra}</td>
                   <td className={retorno(element.id)}>{element.letra}</td>
-                  <td className={retorno(element.id)}>{element.created_at.split("T")[0]}</td>
+                  <td className={retorno(element.id)}>{element.posicion_letra}</td>
+                  <td className={retorno(element.id)}>{element.updated_at.split("T")[0]}</td>
                   <td className={retorno(element.id)}><button onClick={() => mostrarPertenencia(element.id)}>?</button></td>
                   <td className={retorno(element.id)}><button onClick={() => valor(element.id) != undefined ? alert("No puedes editar la pregunta hasta que no la quites del pasapalabras a la que esta asignada.") : location.href = route("pregunta.edit", element.id)}><BsFillPencilFill /></button></td>
                   <td className={retorno(element.id)}><button onClick={() => destroy(element.id)}><BsFillTrash2Fill /></button></td>

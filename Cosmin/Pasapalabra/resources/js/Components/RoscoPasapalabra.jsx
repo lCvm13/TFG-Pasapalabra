@@ -5,8 +5,8 @@ export default function RoscoPasapalabra({ setLetter, letterValue, className = '
         const letters = document.querySelectorAll(".letter");
         letters.forEach((letter, i) => {
             let element = document.getElementById(letter.innerHTML.toLocaleLowerCase());
-            let verticalMovement = 15 * Math.sin(13.33 * (Math.PI / 180) * i - (Math.PI / 2)) + 20;
-            let horizontalMovement = 15 * Math.cos(13.33 * (Math.PI / 180) * i - (Math.PI / 2)) + 20;
+            let verticalMovement = 15 * Math.sin(13.33 * (Math.PI / 180) * i - (Math.PI / 2)) + 25;
+            let horizontalMovement = 15 * Math.cos(13.33 * (Math.PI / 180) * i - (Math.PI / 2)) + 23;
             element.style.top = verticalMovement + "em";
             element.style.left = horizontalMovement + "em";
         });

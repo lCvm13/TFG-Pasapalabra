@@ -60,10 +60,10 @@ export default function PasapalabraForm({ categorias, auth, pasapalabra }) {
   }
   return (
     <div className="min-h-svh min-w-svw bg-pasapalabraImage fondos before:opacity-50">
-      <section className="w-full h-screen grid grid-cols-3">
-        <NavMenu user={auth.user}></NavMenu>
+      <NavMenu user={auth.user}></NavMenu>
+      <section className="w-full h-screen grid grid-cols-2">
         <RoscoPasapalabra letterValue={letterValue} setLetter={setLetter}></RoscoPasapalabra>
-        <div className="bg-white justify-self-center self-center border-solid border-2 border-sky-500 p-10 flex flex-col gap-10 mr-40 mb-40">
+        <div className={`mr-32 justify-self-center self-center border-solid border-8 border-royal-blue p-20 flex flex-col gap-10 bg-white w-full items-center`}>
           <h1 className="text-blue-400 font-extrabold text-4xl">Rosco {pasapalabra.nombre}</h1>
           <form onSubmit={handleUpdate} method="POST" className="flex flex-col gap-10">
             <div className="flex flex-row gap-5 items-center">

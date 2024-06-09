@@ -40,7 +40,50 @@ export default function Dashboard({ auth }) {
                 <br />
                 Podrás borrar cualquier categoría siempre que desees, aunque si algun rosco o pregunta tiene esa categoría, tendrás que confirmar que quieres eliminar dicha categoria de los roscos y preguntas
             </>
-        )
+        ),
+        preguntas: (<>
+            <div className='w-full flex justify-center'>
+                <span className='text-center'><strong>Preguntas</strong></span>
+            </div>
+            <br />
+            Las preguntas son aquellas que se mostrarán en el juego de pasapalabra.
+            <br />
+            Podrás crearlas desde el formulario de preguntas, en el que se mostrarán todos los campos que necesitan rellenarse para poder usarse.
+            <br />
+            Podrás modificar todos los campos de las preguntas cuando desees, teniendo en cuenta que no se podrá editar si la pregunta forma parte de un rosco de pasapalabra.
+            <br />
+            Podrás borrar cualquier pregunta siempre que desees, aunque si algun rosco tiene esa pregunta, tendrás que confirmar que quieres eliminar dicha pregunta de los roscos también.
+            <br />
+            En el listado de preguntas podrás comprobar a qué pasapalabra forma parte dicha pregunta, además de que será visualmente fácil de ver al ser de color distinto al resto de preguntas.
+        </>),
+        pasapalabra: (<>
+            <div className='w-full flex justify-center'>
+                <span className='text-center'><strong>Roscos</strong></span>
+            </div>
+            <br />
+            Los roscos de pasapalabra son aquellos que se usarán para jugar a Pasapalabra.
+            <br />
+            Los roscos de pasapalabra tienen que tener nombre único y se le podrán asignar preguntas a dicho rosco.
+            <br />
+            El rosco tiene una propiedad llamada infinito que te permitirá al usuario poder insertar varias preguntas por cada letra del rosco de pasapalabra. Esto hará que cada vez que repita el rosco, se elija de manera aleatoria una pregunta por letra, pudiendo repetir roscos variados infinitamente.
+            <br />
+            A los roscos de pasapalabra se le tendrán que asignar preguntas para poder jugarse, la pregunta no puede repetirse en el rosco.
+            <br />
+            Si a un rosco se le ha asignado una categoria, a la hora de insertar preguntas en el rosco, solo aparecerán las preguntas que tengan dicha categoria.
+        </>),
+        partida: (<>
+            <div className='w-full flex justify-center'>
+                <span className='text-center'><strong>Partidas</strong></span>
+            </div>
+            <br />
+            Las partidas son las simulaciones del juego Pasapalabra usando los roscos creados por los usuarios
+            <br />
+            El usuario podrá responder las preguntas del rosco o pasar palabra como el juego original del pasapalabra, además podrá hacer click en las letras del rosco tras contestar para ver la respuesta correcta y la respuesta del usuario.
+            < br />
+            Tras terminar el rosco, de momento, se le pedirá confirmación de si quiere repetir la partida, para poder realizar el rosco las veces que necesite
+            < br />
+            Al repetir el rosco, se creará una partida nueva con el mismo nombre, pero con diferente acabado, de manera que en el listado se podrá comprobar el progreso del usuario en dicha partida. Sus preguntas contestadas, sus respuestas y los demás datos de la partida.
+        </>)
     }
     const [text, setText] = useState(textos.inicio);
 
@@ -76,19 +119,19 @@ export default function Dashboard({ auth }) {
                                 </button>
                                 <button
                                     className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded"
-                                    onClick={() => handleButtonClick('Texto del Botón 2')}
+                                    onClick={() => handleButtonClick(textos.preguntas)}
                                 >
                                     Preguntas
                                 </button>
                                 <button
                                     className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded"
-                                    onClick={() => handleButtonClick('Texto del Botón 3')}
+                                    onClick={() => handleButtonClick(textos.pasapalabra)}
                                 >
                                     Pasapalabras
                                 </button>
                                 <button
                                     className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded"
-                                    onClick={() => handleButtonClick('Texto del Botón 1')}
+                                    onClick={() => handleButtonClick(textos.partida)}
                                 >
                                     Partidas
                                 </button>

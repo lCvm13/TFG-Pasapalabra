@@ -79,6 +79,11 @@ class PasapalabrasController extends Controller
      */
     public function update(Request $request, $id_pasapalabra)
     {
+
+        $checkPreguntas = PreguntasPasapalabras::where('id_pasapalabra', $id_pasapalabra)->count();
+        if ($checkPreguntas > 0) {
+            return redirect()->route('pasapalabra.index')->with('message', 'No se puede modificar el rosco porque tiene preguntas asociadas');
+        }
         Pasapalabras::find($id_pasapalabra)->update([
             'nombre' => $request->nombre,
             'id_categoria' => $request->id_categoria,

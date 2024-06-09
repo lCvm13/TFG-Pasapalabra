@@ -42,7 +42,7 @@ export default function PasapalabraRosco({ categoria, auth, pasapalabra, pregunt
   useEffect(() => {
     const letras = document.getElementsByClassName("letter")
     for (let i = 0; i < letras.length; i++) {
-      letras[i].style.backgroundColor = "darkred"
+      letras[i].style.backgroundColor = "orange"
     }
     if (preguntasPasapalabra != undefined) {
       preguntasPasapalabra.forEach(element => {
@@ -50,7 +50,7 @@ export default function PasapalabraRosco({ categoria, auth, pasapalabra, pregunt
         if (pregunta_colorear) {
           let letterElement = document.getElementById(pregunta_colorear.letra.toLowerCase());
           if (letterElement) {
-            letterElement.style.backgroundColor = "green";
+            letterElement.style.backgroundColor = "purple";
           }
         }
       });
@@ -72,7 +72,7 @@ export default function PasapalabraRosco({ categoria, auth, pasapalabra, pregunt
       return alert('No has insertado una pregunta')
     }
 
-    if (document.getElementById(pregunta.letra.toLowerCase()).style.backgroundColor == "green" && !pasapalabra.infinito) {
+    if (document.getElementById(pregunta.letra.toLowerCase()).style.backgroundColor == "purple" && !pasapalabra.infinito) {
       alert("Ya has insertado esta pregunta para esta letra")
       return
     }
@@ -101,13 +101,14 @@ export default function PasapalabraRosco({ categoria, auth, pasapalabra, pregunt
       <RoscoPasapalabra letterValue={letterValue} setLetter={setLetter}></RoscoPasapalabra>
       <section className="w-full h-screen grid grid-cols-2">
         <NavMenu user={auth.user}></NavMenu>
-        <div className={!deleteLetter ? "justify-self-center self-center border-solid border-8 border-royal-blue p-20 flex flex-col gap-10 mr-40 mb-40 bg-white" : "justify-self-center self-center border-solid border-8 border-red-600 p-20 flex flex-col gap-10 mr-40 mb-40 bg-white"}>
+        {/* <div className={!deleteLetter ? "justify-self-center self-center border-solid border-8 border-royal-blue p-20 flex flex-col gap-10 mr-40 mb-40 bg-white" : "justify-self-center self-center border-solid border-8 border-red-600 p-20 flex flex-col gap-10 mr-40 mb-40 bg-white"}> */}
+        <div className={`justify-self-center self-center border-solid border-8 ${!deleteLetter ? 'border-royal-blue' : 'border-red-600'} p-20 flex flex-col gap-10 mr-40 mb-40 bg-white w-full`}>
           <div className="flex flex-cols gap-10 self-center">
             <button onClick={handleOpen} className={`justify-self-center self-center px-4 py-2 ${deleteLetter ? 'bg-red-700  hover:bg-red-400' : 'bg-royal-blue  hover:bg-blue-700'} text-white rounded`}>Ver listado de preguntas</button>
             <button onClick={deleteLetter ? () => setDeleteLetter(false) : () => setDeleteLetter(true)} className={`justify-self-center self-center px-4 py-2 text-white rounded ${deleteLetter ? 'bg-royal-blue hover:bg-blue-700' : 'bg-red-700 hover:bg-red-400'}`}>{deleteLetter ? 'Añadir preguntas' : 'Borrar preguntas'} </button>
           </div>
 
-          <h1 className="text-blue-400 font-extrabold text-4xl">Preguntas {deleteLetter ? <span className="text-red-600">a borrar</span> : null} para la letra {letterValue.toLocaleUpperCase()}</h1>
+          <h1 className="text-center text-blue-400 font-extrabold text-4xl">Preguntas {deleteLetter ? <span className="text-red-600">a borrar</span> : null} para la letra {letterValue.toLocaleUpperCase()}</h1>
           <form onSubmit={deleteLetter ? destroyLetter : handleSubmit} method="POST" className="flex flex-col gap-10">
             <div className="flex flex-row items-center justify-center gap-5">
               <label htmlFor="cat">Selecciona una pregunta por su letra</label>

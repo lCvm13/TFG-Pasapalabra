@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PreguntasPartidas;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PreguntasPartidasController extends Controller
 {
@@ -29,8 +30,13 @@ class PreguntasPartidasController extends Controller
      */
     public function store(Request $request)
     {
+
+        // Tu lógica actual aquí
+        if ($request->respuesta_usuario == null) {
+            $request->merge(['respuesta_usuario' => ""]);
+        }
         $preguntas = PreguntasPartidas::create($request->validate([
-            'respuesta_usuario' => 'required|string|max:255',
+            'respuesta_usuario' => 'string|max:255',
             'id_usuario' => 'required',
             'id_pregunta' => [
                 'required',
@@ -40,8 +46,12 @@ class PreguntasPartidasController extends Controller
             ],
             'id_partida' => 'required'
         ]));
-        // return redirect()->route('partida.edit', ['id_pasapalabra' => $request->id, 'partida' => $request->id_partida]);
+        // Puedes agregar registros de éxito aquí si es necesario
+
+        // Si se ejecuta correctamente, puedes redirigir o devolver una respuesta de éxito
+
     }
+
 
     /**
      * Display the specified resource.
@@ -62,9 +72,11 @@ class PreguntasPartidasController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PreguntasPartidas $preguntas_partidas)
+    public function update(Request $request, $preguntas_partidas)
     {
-        //
+        PreguntasPartidas::where('id_partida', $preguntas_partidas)->where('id_pregunta', $request->id_pregunta)->update([
+            'respuesta_usuario' => $request->respuesta_usuario
+        ]);
     }
 
     /**
