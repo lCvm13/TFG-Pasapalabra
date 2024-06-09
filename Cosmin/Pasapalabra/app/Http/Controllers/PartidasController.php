@@ -124,7 +124,8 @@ class PartidasController extends Controller
             array_push($idPreguntas, $pregunta->id_pregunta);
         }
 
-        $preguntas = Preguntas::whereIn('id', $idPreguntas)->get();
+        // $preguntas = Preguntas::whereIn('id', $idPreguntas)->get();
+        $preguntas = Preguntas::orderBy('letra')->whereIn('id', $idPreguntas)->get();
         $pasapalabra = Pasapalabras::where('id', $request->id_pasapalabra)->first();
 
         // Seleccionar una pregunta al azar por letra si el rosco es infinito

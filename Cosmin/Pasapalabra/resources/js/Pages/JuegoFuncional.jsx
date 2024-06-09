@@ -16,7 +16,7 @@ export default function Juego({ preguntas, pasapalabra, partida, auth, preguntas
     preguntas_partida.forEach(element => {
       console.log(progresoActual)
       if (progresoActual === preguntas.length - 1) {
-        const deseaRepetir = confirm('¿Quieres repetir la partida? Prueba prueba');
+        const deseaRepetir = confirm('¿Quieres repetir la partida?');
         if (deseaRepetir) {
           progresoActual = 0;
           setProgreso(0);
@@ -94,9 +94,9 @@ export default function Juego({ preguntas, pasapalabra, partida, auth, preguntas
         for (let i = 0; i < letras.length; i++) {
           letras[i].style.backgroundColor = "#176bcb"
         }
-        let fecha = new Date().toISOString().split('T')
+
         router.post(route('partida.store'), {
-          nombre: `${partida.nombre}_${`${partida.id}`}`,
+          nombre: `${partida.nombre.split("_")[0]}_${`${partida.id}`}`,
           id_pasapalabra: partida.id_pasapalabra,
           id_usuario: auth.user.id,
         })
@@ -108,6 +108,13 @@ export default function Juego({ preguntas, pasapalabra, partida, auth, preguntas
   }
   const handlePasapalabra = () => {
     // Saltar la pregunta actual incrementando el progreso
+    setResUsuario(resUsuario.concat({ letra: preguntas[progreso].letra, respuesta: "" }))
+    router.post(route('preguntas_partidas.store', {
+      respuesta_usuario: "",
+      id_partida: partida.id,
+      id_pregunta: preguntas[progreso].id,  // Corrección del campo
+      id_usuario: auth.user.id
+    }));
     if (progreso === preguntas.length - 1) {
       const deseaRepetir = confirm('¿Quieres repetir la partida?');
       if (deseaRepetir) {
