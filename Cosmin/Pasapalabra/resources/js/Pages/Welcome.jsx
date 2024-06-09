@@ -1,9 +1,15 @@
-import { Link, Head } from '@inertiajs/react';
+import { Link, Head, usePage } from '@inertiajs/react';
 import Swal from 'sweetalert2'
 
 import { router } from '@inertiajs/react';
 import NavMenu from '@/Components/NavMenu';
 export default function Welcome({ auth, laravelVersion, phpVersion, categorias }) {
+    const { flash } = usePage().props
+    if (flash.message != undefined) {
+        alert(flash.message)
+        flash.message = undefined
+        window.location.reload();
+    }
     const handleImageError = () => {
         document.getElementById('screenshot-container')?.classList.add('!hidden');
         document.getElementById('docs-card')?.classList.add('!row-span-1');
@@ -34,7 +40,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, categorias }
                 <div className="bg-gray-50 text-black/50 dark:bg-transparent dark:text-white/50">
                     <div className="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
                         <div className="relative w-full max-w-2xl px-6 lg:max-w-7xl">
-                            <NavMenu color={"black"}></NavMenu>
+                            <NavMenu color={"black"} user={auth.user}></NavMenu>
                             <header className="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
                                 <div className="flex lg:justify-center lg:col-start-2">
                                     <svg

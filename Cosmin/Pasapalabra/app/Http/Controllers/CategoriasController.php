@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use Exception;
 use Hamcrest\Arrays\IsArray;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
@@ -39,19 +40,23 @@ class CategoriasController extends Controller
     public function store(Request $request): RedirectResponse
     {
         // try {
-        Categoria::create(
-            $request->validate([
-                'nombre_categoria' => 'unique:categorias|required|string|max:255',
-                'id_usuario' => 'required'
-            ])
-        );
-        $message = 'Categoria creada con éxito';
-        if ($request->url_to != null) {
-            return !is_array($request->url_to) ?
-                redirect()->route($request->url_to)->with("message", $message) :
-                redirect()->route($request->url_to[0], $request->url_to[1])->with('message', $message);
+        try {
+            Categoria::create(
+                $request->validate([
+                    'nombre_categoria' => 'unique:categorias|required|string|max:255',
+                    'id_usuario' => 'required'
+                ])
+            );
+            $message = 'Categoria creada con éxito';
+            if ($request->url_to != null) {
+                return !is_array($request->url_to) ?
+                    redirect()->route($request->url_to)->with("message", $message) :
+                    redirect()->route($request->url_to[0], $request->url_to[1])->with('message', $message);
+            }
+            return redirect()->route('categoria.index')->with("message", $message);
+        } catch (Exception $e) {
+            return redirect()->back()->with("message", "El nombre de la categoría ya existe");
         }
-        return redirect()->route('categoria.index')->with("message", $message);
     }
 
     /**
@@ -79,10 +84,14 @@ class CategoriasController extends Controller
      */
     public function update(Request $request, $id_categoria)
     {
-        $categoria = Categoria::find($id_categoria)->update([
-            'nombre_categoria' => $request->nombre_categoria,
-        ]);
-        return redirect()->route('categoria.index')->with('message', 'Categoría modificada correctamente');
+        try {
+            $categoria = Categoria::find($id_categoria)->update([
+                'nombre_categoria' => $request->nombre_categoria,
+            ]);
+            return redirect()->route('categoria.index')->with('message', 'Categoría modificada correctamente');
+        } catch (Exception $e) {
+            return redirect()->route('categoria.index')->with('message', 'La categoría no se ha podido modificar');
+        }
     }
 
     /**
@@ -90,7 +99,11 @@ class CategoriasController extends Controller
      */
     public function destroy($id_categoria)
     {
-        Categoria::find($id_categoria)->delete();
-        return redirect()->route('categoria.index')->with('message', 'Categoria borrada con éxito');
+        try {
+            Categoria::find($id_categoria)->delete();
+            return redirect()->route('categoria.index')->with('message', 'Categoría borrada con éxito');
+        } catch (Exception $e) {
+            return redirect()->route('categoria.index')->with('message', 'La categoría no se ha podido borrar');
+        }
     }
 }

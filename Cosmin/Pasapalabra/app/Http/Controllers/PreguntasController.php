@@ -6,6 +6,7 @@ use App\Models\Categoria;
 use App\Models\Pasapalabras;
 use App\Models\Preguntas;
 use App\Models\PreguntasPasapalabras;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -47,18 +48,21 @@ class PreguntasController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-
-        Preguntas::create(
-            $request->validate([
-                'pregunta' => 'required|string|max:255',
-                'respuesta' => 'required|string|max:255',
-                'letra' => 'required|string|max:1',
-                'posicion_letra' => 'required',
-                'id_usuario' => 'required',
-                'id_categoria' => ''
-            ])
-        );
-        return to_route('pregunta.index');
+        try {
+            Preguntas::create(
+                $request->validate([
+                    'pregunta' => 'required|string|max:255',
+                    'respuesta' => 'required|string|max:255',
+                    'letra' => 'required|string|max:1',
+                    'posicion_letra' => 'required',
+                    'id_usuario' => 'required',
+                    'id_categoria' => ''
+                ])
+            );
+            return to_route('pregunta.index');
+        } catch (\Exception $e) {
+            return to_route('pregunta.index')->with('message', 'La pregunta no se ha podido crear');
+        }
     }
 
     /**
@@ -84,14 +88,18 @@ class PreguntasController extends Controller
      */
     public function update(Request $request, $id_pregunta)
     {
-        Preguntas::find($id_pregunta)->update([
-            'pregunta' => $request->pregunta,
-            'respuesta' => $request->respuesta,
-            'letra' => $request->letra,
-            'posicion_letra' => $request->posicion_letra,
-            'id_categoria' => $request->id_categoria,
-        ]);
-        return redirect()->route('pregunta.index')->with(['message' => 'Pregunta modificada correctamente']);
+        try {
+            Preguntas::find($id_pregunta)->update([
+                'pregunta' => $request->pregunta,
+                'respuesta' => $request->respuesta,
+                'letra' => $request->letra,
+                'posicion_letra' => $request->posicion_letra,
+                'id_categoria' => $request->id_categoria,
+            ]);
+            return redirect()->route('pregunta.index')->with('message', 'Pregunta modificada correctamente');
+        } catch (Exception $e) {
+            return redirect()->route('pregunta.index')->with('message', 'Pregunta no se ha podido modificar');
+        }
     }
 
 

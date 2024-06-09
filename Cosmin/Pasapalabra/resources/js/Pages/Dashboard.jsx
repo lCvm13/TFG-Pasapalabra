@@ -1,10 +1,16 @@
 import NavMenu from '@/Components/NavMenu';
 import PrimaryButton from '@/Components/PrimaryButton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
 export default function Dashboard({ auth }) {
+    const { flash } = usePage().props
+    if (flash.message != undefined) {
+        alert(flash.message)
+        flash.message = undefined
+        window.location.reload();
+    }
     const asset = (path) => {
         return `/storage/images/${path}`;
     }

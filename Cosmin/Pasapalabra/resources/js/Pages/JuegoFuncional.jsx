@@ -1,20 +1,24 @@
 
 import Pasapalabra from "@/Components/RoscoPasapalabra";
 import { useEffect, useState } from "react";
-import { router } from "@inertiajs/react"
+import { router, usePage } from "@inertiajs/react"
 import NavMenu from "@/Components/NavMenu";
 export default function Juego({ preguntas, pasapalabra, partida, auth, preguntas_partida }) {
+  const { flash } = usePage().props
+  if (flash.message != undefined) {
+    alert(flash.message)
+    flash.message = undefined
+    window.location.reload();
+  }
   const [letterValue, setLetterValue] = useState("a")
   const [respuestaUsuario, setRespuestaUsuario] = useState('');
   const [progreso, setProgreso] = useState(0);
   const [resUsuario, setResUsuario] = useState([])
   const [historyUsuario, setHistoryUsuario] = useState([])
   let arrayPreguntasUser = []
-  console.log(preguntas_partida)
   useEffect(() => {
     let progresoActual = 0
     preguntas_partida.forEach(element => {
-      console.log(progresoActual)
       if (progresoActual === preguntas.length - 1) {
         const deseaRepetir = confirm('¿Quieres repetir la partida?');
         if (deseaRepetir) {
@@ -24,7 +28,6 @@ export default function Juego({ preguntas, pasapalabra, partida, auth, preguntas
           for (let i = 0; i < letras.length; i++) {
             letras[i].style.backgroundColor = "#176bcb"
           }
-          let fecha = new Date().toISOString().split('T')
           router.post(route('partida.store'), {
             nombre: `${partida.nombre}_${`${partida.id}`}`,
             id_pasapalabra: partida.id_pasapalabra,
@@ -145,7 +148,7 @@ export default function Juego({ preguntas, pasapalabra, partida, auth, preguntas
         <h1 className="text-2xl font-bold mb-4">Pregunta</h1>
         <h2 className="text-xl mb-4">{preguntas[progreso].pregunta}</h2>
         <p className="mb-2"><span className="font-bold">Letra:</span> {preguntas[progreso].letra}</p>
-        <p className="mb-4"><span className="font-bold">Posición:</span> {preguntas[progreso].posicion}</p>
+        <p className="mb-4"><span className="font-bold">Posición:</span> {preguntas[progreso].posicion_letra}</p>
         <form onSubmit={handleSubmit} className="flex flex-col">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">

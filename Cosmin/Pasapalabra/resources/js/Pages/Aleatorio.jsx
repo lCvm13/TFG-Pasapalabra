@@ -1,8 +1,14 @@
 import Pasapalabra from "@/Components/RoscoPasapalabra";
 import { useState } from "react";
-import { router } from "@inertiajs/react"
+import { router, usePage } from "@inertiajs/react"
 import NavMenu from "@/Components/NavMenu";
 export default function Aleatorio({ preguntas, categorias, auth }) {
+  const { flash } = usePage().props
+  if (flash.message != undefined) {
+    alert(flash.message)
+    flash.message = undefined
+    window.location.reload();
+  }
   const [letterValue, setLetterValue] = useState("a")
   const [resUsuario, setResUsuario] = useState([])
 

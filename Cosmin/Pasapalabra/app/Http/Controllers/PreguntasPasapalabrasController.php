@@ -7,6 +7,7 @@ use App\Models\Pasapalabras;
 use App\Models\Preguntas;
 
 use App\Models\PreguntasPasapalabras;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -47,19 +48,23 @@ class PreguntasPasapalabrasController extends Controller
      */
     public function store(Request $request)
     {
-        $preguntaCrear = PreguntasPasapalabras::create(
-            $request->validate([
-                'id_usuario' => 'required',
-                'id_pasapalabra' => 'required',
-                'id_pregunta' => [
-                    'required',
-                    Rule::unique('preguntas_pasapalabras')->where(function ($query) use ($request) {
-                        return $query->where('id_pasapalabra', $request->id_pasapalabra);
-                    }),
-                ],
-            ])
-        );
-        return to_route('preguntas_pasapalabras.create', ['id_pasapalabra' => $request->id_pasapalabra])->with('message', 'Pregunta insertada con éxito');
+        try {
+            $preguntaCrear = PreguntasPasapalabras::create(
+                $request->validate([
+                    'id_usuario' => 'required',
+                    'id_pasapalabra' => 'required',
+                    'id_pregunta' => [
+                        'required',
+                        Rule::unique('preguntas_pasapalabras')->where(function ($query) use ($request) {
+                            return $query->where('id_pasapalabra', $request->id_pasapalabra);
+                        }),
+                    ],
+                ])
+            );
+            return to_route('preguntas_pasapalabras.create', ['id_pasapalabra' => $request->id_pasapalabra])->with('message', 'Pregunta insertada con éxito');
+        } catch (Exception $e) {
+            return to_route('preguntas_pasapalabras.create', ['id_pasapalabra' => $request->id_pasapalabra])->with('message', 'La pregunta no se ha podido insertar');
+        }
     }
 
     /**
@@ -91,7 +96,11 @@ class PreguntasPasapalabrasController extends Controller
      */
     public function destroy(Request $request)
     {
-        PreguntasPasapalabras::where('id_pregunta', $request->preguntas_pasapalabra)->delete();
-        return redirect()->route('preguntas_pasapalabras.create', ['id_pasapalabra' => $request->id_pasapalabra])->with('message', 'Pregunta eliminada del rosco correctamente.');
+        try {
+            PreguntasPasapalabras::where('id_pregunta', $request->preguntas_pasapalabra)->delete();
+            return redirect()->route('preguntas_pasapalabras.create', ['id_pasapalabra' => $request->id_pasapalabra])->with('message', 'Pregunta eliminada del rosco correctamente.');
+        } catch (Exception $e) {
+            return redirect()->route('preguntas_pasapalabras.create', ['id_pasapalabra' => $request->id_pasapalabra])->with('message', 'No se ha podido eliminar la pregunta.');
+        }
     }
 }

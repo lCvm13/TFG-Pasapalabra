@@ -30,8 +30,6 @@ class PreguntasPartidasController extends Controller
      */
     public function store(Request $request)
     {
-
-        // Tu lógica actual aquí
         if ($request->respuesta_usuario == null) {
             $request->merge(['respuesta_usuario' => ""]);
         }
@@ -46,10 +44,6 @@ class PreguntasPartidasController extends Controller
             ],
             'id_partida' => 'required'
         ]));
-        // Puedes agregar registros de éxito aquí si es necesario
-
-        // Si se ejecuta correctamente, puedes redirigir o devolver una respuesta de éxito
-
     }
 
 

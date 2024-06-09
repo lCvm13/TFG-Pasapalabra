@@ -151,14 +151,16 @@ export default function ListCategorias({ preguntas, categorias, auth, preguntas_
         let nombre_pasapalabra = pasapalabra.find(e => e.id == element.id_pasapalabra)
         string += nombre_pasapalabra.nombre
       })
+      return alert(string)
     } else {
       string = "La pregunta pertenece los roscos "
       valor.map(element => {
         let nombre_pasapalabra = pasapalabra.find(e => e.id == element.id_pasapalabra)
         string += nombre_pasapalabra.nombre + ", "
+        return alert(string.slice(0, string.length - 2))
       })
     }
-    return alert(string.slice(0, string.length - 2))
+    return
   }
   const valor = (id) => {
     let valor = preguntas_pasapalabra.find(element => element.id_pregunta == id)

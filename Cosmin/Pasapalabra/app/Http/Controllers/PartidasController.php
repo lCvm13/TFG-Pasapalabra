@@ -8,6 +8,7 @@ use App\Models\Pasapalabras;
 use App\Models\Preguntas;
 use App\Models\PreguntasPartidas;
 use App\Models\PreguntasPasapalabras;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,9 +53,15 @@ class PartidasController extends Controller
 
         $validatedData['num_sin_contestar'] = $longitud;
         // Crear la nueva partida
-        $nuevaPartida = Partidas::create($validatedData);
+        try {
+            $nuevaPartida = Partidas::create($validatedData);
+            return redirect()->route('partida.edit', ['partida' => $nuevaPartida, 'id_pasapalabra' => $request->id_pasapalabra]);
+        } catch (Exception $e) {
+            return redirect()->back()->with('message', 'Error al crear la partida');
+        }
+
         // return to_route('partida.edit', ['id_pasapalabra' => $request->id, 'partida' => $nuevaPartida]);
-        return redirect()->route('partida.edit', ['partida' => $nuevaPartida, 'id_pasapalabra' => $request->id_pasapalabra]);
+
     }
 
     /**
@@ -185,8 +192,12 @@ class PartidasController extends Controller
      */
     public function destroy($id_partida)
     {
-        Partidas::find($id_partida)->delete();
-        return redirect()->route('partida.index')->with('message', 'Partida borrada con éxito');
+        try {
+            Partidas::find($id_partida)->delete();
+            return redirect()->route('partida.index')->with('message', 'Partida borrada con éxito');
+        } catch (Exception $e) {
+            return redirect()->route('partida.index')->with('message', 'La partida no se ha podido borrar');
+        }
     }
     /**
      * JUEGO ALEATORIO DE MOMENTO USANDO UN JSON

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Categoria;
 use App\Models\Preguntas;
 use App\Models\PreguntasPasapalabras;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
@@ -41,17 +42,21 @@ class PasapalabrasController extends Controller
     public function store(Request $request): RedirectResponse
     {
         //
-        $nuevo_pasapalabra =  Pasapalabras::create(
-            $request->validate([
-                'nombre' => 'required|string|max:255',
-                'id_usuario' => 'required'
-            ])
-        );
+        try {
+            $nuevo_pasapalabra =  Pasapalabras::create(
+                $request->validate([
+                    'nombre' => 'required|string|max:255',
+                    'id_usuario' => 'required'
+                ])
+            );
 
-        if ($request->url_to != null) {
-            return to_route($request->url_to, ['pasapalabra' => $nuevo_pasapalabra->id]);
+            if ($request->url_to != null) {
+                return to_route($request->url_to, ['pasapalabra' => $nuevo_pasapalabra->id]);
+            }
+            return to_route('pasapalabra.index');
+        } catch (Exception $e) {
+            return redirect()->back()->with('message', 'El rosco debe tener nombre único');
         }
-        return to_route('pasapalabra.index');
     }
 
     /**
@@ -84,13 +89,17 @@ class PasapalabrasController extends Controller
         if ($checkPreguntas > 0) {
             return redirect()->route('pasapalabra.index')->with('message', 'No se puede modificar el rosco porque tiene preguntas asociadas');
         }
-        Pasapalabras::find($id_pasapalabra)->update([
-            'nombre' => $request->nombre,
-            'id_categoria' => $request->id_categoria,
-            'infinito' => $request->infinito,
-        ]);
+        try {
+            Pasapalabras::find($id_pasapalabra)->update([
+                'nombre' => $request->nombre,
+                'id_categoria' => $request->id_categoria,
+                'infinito' => $request->infinito,
+            ]);
 
-        return redirect()->route('pasapalabra.index')->with('message', 'Rosco modificado correctamente');
+            return redirect()->route('pasapalabra.index')->with('message', 'Rosco modificado correctamente');
+        } catch (Exception $e) {
+            return redirect()->route('pasapalabra.index')->with('message', 'El rosco no se ha podido modificar');
+        }
     }
 
     /**
@@ -98,8 +107,11 @@ class PasapalabrasController extends Controller
      */
     public function destroy($id_pasapalabra)
     {
-
-        Pasapalabras::find($id_pasapalabra)->delete();
-        return redirect()->route('pasapalabra.index')->with('message', 'Rosco borrado con éxito');
+        try {
+            Pasapalabras::find($id_pasapalabra)->delete();
+            return redirect()->route('pasapalabra.index')->with('message', 'Rosco borrado con éxito');
+        } catch (Exception $e) {
+            return redirect()->route('pasapalabra.index')->with('message', 'El rosco no se ha podido borrar');
+        }
     }
 }
