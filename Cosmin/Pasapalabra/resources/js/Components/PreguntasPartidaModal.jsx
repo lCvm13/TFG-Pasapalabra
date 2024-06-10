@@ -23,7 +23,7 @@ const PreguntaModal = ({ isOpen, onClose, preguntas, categorias }) => {
       <div className="bg-white rounded-lg p-6 max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
         <h2 className="text-2xl font-semibold mb-4">{"P: " + currentPregunta.pregunta}</h2>
         <p className="mb-4">{"R: " + currentPregunta.respuesta}</p>
-        <p className="mb-4">{"R_U: " + currentPregunta.respuestaUsuario}</p>
+        <p className="mb-4">{"R_U: " + (currentPregunta.respuestaUsuario == "" ? "Pasapalabra" : currentPregunta.respuestaUsuario)}</p>
         <p className="mb-4"><strong>Categoría:</strong> {categorias.find(e => e.id == currentPregunta.id_categoria) ?? "No tiene categoria"}</p>
         <div className="flex justify-between mt-4">
           <button

@@ -29,7 +29,7 @@ export default function NavMenu({ user, color }) {
 
   }
   function handleSubmit(nombre) {
-    router.post(route("pasapalabra.store"), { nombre: nombre, id_usuario: user.id, url_to: "pasapalabra.edit" })
+    router.post(route("pasapalabra.store"), { nombre: nombre, id_usuario: user?.id, url_to: "pasapalabra.edit" })
   }
   function handleSubmitSwal(nombre) {
     router.post(route("categoria.store"), { nombre_categoria: nombre, id_usuario: user.id, url_to: null })

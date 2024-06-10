@@ -45,6 +45,7 @@ export default function Aleatorio({ preguntas, categorias, auth }) {
   }
   const handlePasapalabra = () => {
     // Saltar la pregunta actual incrementando el progreso
+    setResUsuario(resUsuario.concat({ letra: preguntas.preguntas[progreso].letra, respuesta: "" }))
     setProgreso(progreso + 1);
     setRespuestaUsuario('');
   }

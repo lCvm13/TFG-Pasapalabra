@@ -59,7 +59,7 @@ class PreguntasController extends Controller
                     'id_categoria' => ''
                 ])
             );
-            return to_route('pregunta.index');
+            return to_route('pregunta.index')->with('message', 'Pregunta creada con éxito');
         } catch (\Exception $e) {
             return to_route('pregunta.index')->with('message', 'La pregunta no se ha podido crear');
         }
